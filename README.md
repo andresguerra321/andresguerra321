@@ -1,15 +1,15 @@
 <div align="center">
 
 <!-- BANNER ANIMADO -->
-[![header](https://capsule-render.vercel.app/api?type=waving&color=0:0D0D0D,50:0a2a1a,100:00FF87&height=200&section=header&text=Andrés%20Felipe%20Guerra&fontSize=42&fontColor=ffffff&fontAlignY=38&desc=Fullstack%20Developer%20·%20AI%20Automation%20·%20Security&descSize=16&descAlignY=58&descColor=00FF87&animation=fadeIn)](https://paginaweb.andres-felipe-gueco.workers.dev)
+[![header](https://capsule-render.vercel.app/api?type=waving&color=0:0D0D0D,50:0a2a1a,100:0066FF&height=200&section=header&text=Andrés%20Felipe%20Guerra&fontSize=42&fontColor=ffffff&fontAlignY=38&desc=Fullstack%20Developer%20·%20AI%20Automation%20·%20Security&descSize=16&descAlignY=58&descColor=0066FF&animation=fadeIn)](https://paginaweb.andres-felipe-gueco.workers.dev)
 
 <!-- TYPING ANIMADO -->
-[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=18&pause=1000&color=00FF87&center=true&vCenter=true&width=500&lines=Building+secure+%26+automated+ecosystems;Fullstack+Dev+%2B+AI+Automation;Open+to+freelance+%26+collaborations+%F0%9F%9A%80)](https://paginaweb.andres-felipe-gueco.workers.dev)
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=18&pause=1000&color=0066FF&center=true&vCenter=true&width=500&lines=Building+secure+%26+automated+ecosystems;Fullstack+Dev+%2B+AI+Automation;Open+to+freelance+%26+collaborations+%F0%9F%9A%80)](https://paginaweb.andres-felipe-gueco.workers.dev)
 
 <!-- BADGES CONTACTO -->
 <br/>
 
-[![Portfolio](https://img.shields.io/badge/Portfolio-0D0D0D?style=for-the-badge&logo=vercel&logoColor=00FF87)](https://paginaweb.andres-felipe-gueco.workers.dev)
+[![Portfolio](https://img.shields.io/badge/Portfolio-0D0D0D?style=for-the-badge&logo=vercel&logoColor=0066FF)](https://paginaweb.andres-felipe-gueco.workers.dev)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/andresfelipeguerra)
 [![Fiverr](https://img.shields.io/badge/Fiverr-1DBF73?style=for-the-badge&logo=fiverr&logoColor=white)](https://www.fiverr.com/andresguerra321)
 [![Email](https://img.shields.io/badge/Gmail-EA4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:andres.guerra@gmail.com)
@@ -87,8 +87,8 @@ const ag = {
 
 <div align="center">
 
-![GitHub Stats](https://github-readme-stats.vercel.app/api?username=andresguerra321&show_icons=true&theme=dark&bg_color=0D0D0D&title_color=00FF87&icon_color=00FF87&text_color=ffffff&border_color=1a1a1a&hide_border=false&rank_icon=github)
-![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=andresguerra321&layout=compact&theme=dark&bg_color=0D0D0D&title_color=00FF87&text_color=ffffff&border_color=1a1a1a)
+![GitHub Stats](https://github-readme-stats.vercel.app/api?username=andresguerra321&show_icons=true&theme=dark&bg_color=0D0D0D&title_color=0066FF&icon_color=0066FF&text_color=ffffff&border_color=1a1a1a&hide_border=false&rank_icon=github)
+![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=andresguerra321&layout=compact&theme=dark&bg_color=0D0D0D&title_color=0066FF&text_color=ffffff&border_color=1a1a1a)
 
 </div>
 
@@ -97,7 +97,7 @@ const ag = {
 <!-- FOOTER ANIMADO -->
 <div align="center">
 
-[![footer](https://capsule-render.vercel.app/api?type=waving&color=0:00FF87,50:0a2a1a,100:0D0D0D&height=100&section=footer)](https://paginaweb.andres-felipe-gueco.workers.dev)
+[![footer](https://capsule-render.vercel.app/api?type=waving&color=0:0066FF,50:0a2a1a,100:0D0D0D&height=100&section=footer)](https://paginaweb.andres-felipe-gueco.workers.dev)
 
 *Bucaramanga, Colombia · Disponible para freelance · 2026*
 
