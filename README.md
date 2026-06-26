@@ -52,7 +52,7 @@ const ag = {
 ![Baileys](https://img.shields.io/badge/Baileys-25D366?style=flat-square&logo=whatsapp&logoColor=white)
 ![Groq](https://img.shields.io/badge/Groq_AI-FF4500?style=flat-square&logo=openai&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)
-![LLaMA](https://img.shields.io/badge/LLaMA-7C3AED?style=flat-square&logo=meta&logoColor=white)
+
 
 </div>
 
@@ -80,8 +80,6 @@ const ag = {
 
 <br/>
 
-**🎮 BLOXCUP 26** *(en desarrollo)* — Juego de fútbol en Roblox con personajes brainrot, mecánicas gacha y sistema de rebirth persistente.
-`Lua` `Roblox Studio` `DataStore`
 
 ---
 
