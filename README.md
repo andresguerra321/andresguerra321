@@ -24,7 +24,7 @@
 const ag = {
   location  : "Bucaramanga, Colombia 🇨🇴",
   focus     : ["AI Automation", "Backend Architecture", "Security"],
-  currently : "Building BLOXCUP 26 🎮",
+  currently : "Building a new project ",
   available : true  // Open for freelance projects
 };
 ```
