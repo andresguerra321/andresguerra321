@@ -4,14 +4,14 @@
 [![header](https://capsule-render.vercel.app/api?type=waving&color=0:0D0D0D,50:0a2a1a,100:0066FF&height=200&section=header&text=Andrés%20Felipe%20Guerra&fontSize=42&fontColor=ffffff&fontAlignY=38&desc=Fullstack%20Developer%20·%20AI%20Automation%20·%20Security&descSize=16&descAlignY=58&descColor=0066FF&animation=fadeIn)](https://paginaweb.andres-felipe-gueco.workers.dev)
 
 <!-- TYPING ANIMADO -->
-[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=18&pause=1000&color=0066FF&center=true&vCenter=true&width=500&lines=Building+secure+%26+automated+ecosystems;Fullstack+Dev+%2B+AI+Automation;Open+to+freelance+%26+collaborations+%F0%9F%9A%80)](https://paginaweb.andres-felipe-gueco.workers.dev)
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=18&pause=1000&color=0066FF&center=true&vCenter=true&width=500&lines=Building+secure+%26+automated+ecosystems;Fullstack+Dev+%2B+AI+Automation)](https://paginaweb.andres-felipe-gueco.workers.dev)
 
 <!-- BADGES CONTACTO -->
 <br/>
 
 [![Portfolio](https://img.shields.io/badge/Portfolio-0D0D0D?style=for-the-badge&logo=vercel&logoColor=0066FF)](https://paginaweb.andres-felipe-gueco.workers.dev)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/andresfelipeguerra)
-[![Fiverr](https://img.shields.io/badge/Fiverr-1DBF73?style=for-the-badge&logo=fiverr&logoColor=white)](https://es.fiverr.com/sellers/master123le/edit)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/public-profile/settings/?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base%3BuwsC50FeRpKYQLAtbk6n7A%3D%3D)
+[![Fiverr](https://img.shields.io/badge/Fiverr-1DBF73?style=for-the-badge&logo=fiverr&logoColor=white)](https://www.fiverr.com/andresguerra321)
 [![Email](https://img.shields.io/badge/Gmail-EA4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:andres.guerra@gmail.com)
 
 </div>
@@ -21,11 +21,16 @@
 ---
 
 ```js
-const ag = {
-  location  : "Bucaramanga, Colombia 🇨🇴",
-  focus     : ["AI Automation", "Backend Architecture", "Security"],
-  currently : "Building a new project ",
-  available : true  // Open for freelance projects
+const andres = {
+  role           : "Fullstack Developer & AI Specialist",
+  location       : "Bucaramanga, Colombia 🇨🇴",
+  focus          : ["AI Automation", "Backend Architecture", "Security"],
+  techStack      : {
+    backend      : ["Node.js", "Python", "FastAPI", "MySQL"],
+    frontend     : ["React", "Next.js", "TailwindCSS"],
+    automation   : ["n8n", "Docker", "Groq", "LLaMA"]
+  },
+  currentMission : "Building scalable, secure, and automated digital ecosystems."
 };
 ```
 
@@ -52,7 +57,7 @@ const ag = {
 ![Baileys](https://img.shields.io/badge/Baileys-25D366?style=flat-square&logo=whatsapp&logoColor=white)
 ![Groq](https://img.shields.io/badge/Groq_AI-FF4500?style=flat-square&logo=openai&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)
-
+![LLaMA](https://img.shields.io/badge/LLaMA-7C3AED?style=flat-square&logo=meta&logoColor=white)
 
 </div>
 
@@ -78,9 +83,6 @@ const ag = {
 **🏦 Banco ACME** — Plataforma financiera simulada con arquitectura de BD resiliente y transacciones seguras.
 `Node.js` `MySQL`
 
-<br/>
-
-
 ---
 
 <div align="center">
@@ -97,6 +99,6 @@ const ag = {
 
 [![footer](https://capsule-render.vercel.app/api?type=waving&color=0:0066FF,50:0a2a1a,100:0D0D0D&height=100&section=footer)](https://paginaweb.andres-felipe-gueco.workers.dev)
 
-*Bucaramanga, Colombia · Disponible para freelance · 2026*
+*Bucaramanga, Colombia · 2026*
 
 </div>
