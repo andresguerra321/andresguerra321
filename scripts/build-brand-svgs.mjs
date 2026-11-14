@@ -1,29 +1,34 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const OUT_DIR = path.resolve('assets/apple');
+const OUT_DIR = path.resolve('assets/v3');
 fs.mkdirSync(OUT_DIR, { recursive: true });
+
+const sculpturePath = path.resolve('scripts/centerpiece-3d.jpg');
+const sculptureB64 = fs.readFileSync(sculpturePath).toString('base64');
 
 const THEMES = {
   dark: {
-    surface: '#09090B',
-    card: '#111114',
-    tile: '#16161A',
-    border: '#222228',
-    divider: '#1C1C22',
+    surface: '#060709',
+    card: '#111115',
+    chipBg: '#121218',
+    border: '#222229',
+    chipBorder: '#2C2C36',
+    divider: '#1D1D24',
     text: '#F5F5F7',
     textMuted: '#A1A1AA',
     textDim: '#71717A',
     accent: '#2563EB',
     accentText: '#60A5FA',
-    pillBg: '#141418',
-    pillBorder: '#27272E',
+    pillBg: '#111116',
+    pillBorder: '#25252E',
   },
   light: {
     surface: '#FFFFFF',
     card: '#F5F5F7',
-    tile: '#FFFFFF',
+    chipBg: '#121218',
     border: '#E5E5EA',
+    chipBorder: '#2C2C36',
     divider: '#E5E5EA',
     text: '#1D1D1F',
     textMuted: '#515154',
@@ -39,63 +44,129 @@ const FONT_DISPLAY = `-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inte
 const FONT_TEXT = `-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', 'Segoe UI', Helvetica, Arial, sans-serif`;
 const FONT_MONO = `'SF Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace`;
 
-function renderHero(t) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="276" viewBox="0 0 1200 276" fill="none" role="img" aria-label="Andrés Felipe Guerra — Fullstack Engineer">
+function renderHero(mode) {
+  // Showcase canvas remains studio #060709 so the 3D obsidian & titanium sculpture integrates seamlessly,
+  // using crisp Apple Pro framing in both dark and light GitHub themes.
+  const outerBorder = mode === 'dark' ? '#23232B' : '#D2D2D7';
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="336" viewBox="0 0 1200 336" fill="none" role="img" aria-label="Andrés Felipe Guerra — Fullstack Engineer &amp; AI Systems">
   <defs>
+    <radialGradient id="sculptMaskGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="56%" stop-color="#FFFFFF" stop-opacity="1"/>
+      <stop offset="86%" stop-color="#FFFFFF" stop-opacity="0.72"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+    <mask id="sculptMask">
+      <rect x="665" y="-12" width="490" height="366" fill="url(#sculptMaskGrad)"/>
+    </mask>
+    <clipPath id="heroFrame">
+      <rect x="0.5" y="0.5" width="1199" height="335" rx="24"/>
+    </clipPath>
     <style>
       .display { font-family: ${FONT_DISPLAY}; }
       .sans { font-family: ${FONT_TEXT}; }
       .mono { font-family: ${FONT_MONO}; }
       @keyframes breathe {
         0%, 100% { opacity: 1; }
-        50% { opacity: 0.4; }
+        50% { opacity: 0.42; }
       }
-      .liveDot { animation: breathe 3.4s ease-in-out infinite; }
+      @keyframes levitate {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-7px); }
+      }
+      @keyframes floatA {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-5px); }
+      }
+      @keyframes floatB {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(5px); }
+      }
+      .liveDot { animation: breathe 3.2s ease-in-out infinite; }
+      .sculptFloat { animation: levitate 7s ease-in-out infinite; }
+      .chipFloatA { animation: floatA 5.8s ease-in-out infinite; }
+      .chipFloatB { animation: floatB 6.4s ease-in-out infinite; }
     </style>
   </defs>
 
-  <!-- Flat Apple Surface (zero gradients, zero mesh/glow) -->
-  <rect x="0.5" y="0.5" width="1199" height="275" rx="24" fill="${t.surface}" stroke="${t.border}" stroke-width="1"/>
+  <g clip-path="url(#heroFrame)">
+    <!-- Match corner #060709 of studio 3D render cleanly -->
+    <rect x="0" y="0" width="1200" height="336" fill="#060709"/>
 
-  <!-- Left Apple Editorial Stack -->
-  <g transform="translate(56, 44)">
-    <!-- Minimal Status Pill -->
-    <rect x="0" y="0" width="218" height="28" rx="14" fill="${t.pillBg}" stroke="${t.pillBorder}" stroke-width="1"/>
-    <circle cx="15" cy="14" r="3.5" fill="${t.accentText}" class="liveDot"/>
-    <text x="27" y="18" class="sans" font-size="12" font-weight="500" fill="${t.textMuted}">Available  ·  Colombia</text>
+    <!-- Subtle orbital guide arc behind 3D prism -->
+    <g transform="translate(918, 168)">
+      <ellipse cx="0" cy="0" rx="210" ry="96" transform="rotate(-18)" stroke="#1C2230" stroke-width="1" stroke-dasharray="5 9" opacity="0.7"/>
+      <circle cx="0" cy="0" r="148" stroke="#2563EB" stroke-opacity="0.22" stroke-width="1" stroke-dasharray="70 190">
+        <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="40s" repeatCount="indefinite"/>
+      </circle>
+    </g>
 
-    <!-- Command Headline -->
-    <text x="0" y="84" class="display" font-size="50" font-weight="600" letter-spacing="-1.6" fill="${t.text}">Andrés Felipe Guerra</text>
+    <!-- Studio 3D Apple Titanium & Royal-Blue Centerpiece -->
+    <g class="sculptFloat">
+      <image href="data:image/jpeg;base64,${sculptureB64}" x="665" y="-12" width="490" height="366" preserveAspectRatio="xMidYMid meet" mask="url(#sculptMask)"/>
+    </g>
 
-    <!-- Apple Two-Tone Tagline -->
-    <text x="0" y="122" class="display" font-size="21" font-weight="500" letter-spacing="-0.3" fill="${t.textMuted}">Fullstack Software Engineer.  <tspan fill="${t.accentText}">AI Systems &amp; Security.</tspan></text>
+    <!-- Floating Apple Callout Chip A -->
+    <g transform="translate(652, 46)">
+      <g class="chipFloatA">
+        <rect x="0" y="0" width="174" height="48" rx="14" fill="#111116" fill-opacity="0.94" stroke="#282832" stroke-width="1"/>
+        <circle cx="17" cy="18" r="3.5" fill="#60A5FA" class="liveDot"/>
+        <text x="29" y="21.5" class="sans" font-size="12" font-weight="600" fill="#F5F5F7">AI &amp; Hybrid RAG</text>
+        <text x="17" y="38" class="mono" font-size="10" font-weight="500" fill="#8E8E98">pgvector · FastAPI</text>
+      </g>
+    </g>
 
-    <!-- Clean Apple Spec Bar -->
-    <g transform="translate(0, 150)">
-      <rect x="0" y="0" width="840" height="46" rx="14" fill="${t.card}" stroke="${t.border}" stroke-width="1"/>
+    <!-- Floating Apple Callout Chip B -->
+    <g transform="translate(996, 240)">
+      <g class="chipFloatB">
+        <rect x="0" y="0" width="170" height="54" rx="14" fill="#111116" fill-opacity="0.94" stroke="#282832" stroke-width="1"/>
+        <text x="16" y="25" class="display" font-size="17" font-weight="700" fill="#F5F5F7">793</text>
+        <text x="53" y="24" class="sans" font-size="11" font-weight="500" fill="#A1A1AA">Contribs</text>
+        <text x="16" y="42" class="mono" font-size="10" font-weight="500" fill="#60A5FA">37 Public Repos</text>
+        <!-- Crisp 4-bar Apple activity micro sparkline -->
+        <rect x="128" y="21" width="4" height="10" rx="2" fill="#1E3A8A"/>
+        <rect x="135" y="16" width="4" height="15" rx="2" fill="#2563EB"/>
+        <rect x="142" y="19" width="4" height="12" rx="2" fill="#3B82F6"/>
+        <rect x="149" y="12" width="4" height="19" rx="2" fill="#60A5FA"/>
+      </g>
+    </g>
 
-      <text x="20" y="19" class="sans" font-size="10.5" font-weight="500" fill="${t.textDim}">Focus</text>
-      <text x="20" y="36" class="sans" font-size="13" font-weight="600" fill="${t.text}">Hybrid RAG · DDD · CTI</text>
+    <!-- Left Editorial Column -->
+    <g transform="translate(54, 44)">
+      <!-- Availability Pill -->
+      <rect x="0" y="0" width="224" height="28" rx="14" fill="#111116" stroke="#262630" stroke-width="1"/>
+      <circle cx="15" cy="14" r="3.5" fill="#60A5FA" class="liveDot"/>
+      <text x="27" y="18" class="sans" font-size="12" font-weight="500" fill="#A1A1AA">AG Engineering  ·  Colombia</text>
 
-      <line x1="250" y1="10" x2="250" y2="36" stroke="${t.divider}" stroke-width="1"/>
+      <!-- Display Name -->
+      <text x="0" y="88" class="display" font-size="50" font-weight="600" letter-spacing="-1.6" fill="#F5F5F7">Andrés Felipe Guerra</text>
 
-      <text x="272" y="19" class="sans" font-size="10.5" font-weight="500" fill="${t.textDim}">Core Stack</text>
-      <text x="272" y="36" class="sans" font-size="13" font-weight="600" fill="${t.text}">Python · Java · React · SQL</text>
+      <!-- Keynote Statement -->
+      <text x="0" y="126" class="display" font-size="21" font-weight="500" letter-spacing="-0.3" fill="#E4E4E7">Fullstack Engineer.  <tspan fill="#60A5FA">AI Systems &amp; Security.</tspan></text>
 
-      <line x1="538" y1="10" x2="538" y2="36" stroke="${t.divider}" stroke-width="1"/>
+      <!-- Supporting Subcopy -->
+      <text x="0" y="160" class="sans" font-size="14.5" font-weight="400" fill="#8E8E98">Architecting RAG intelligence, Hexagonal backends &amp; forensic tooling.</text>
 
-      <text x="560" y="19" class="sans" font-size="10.5" font-weight="500" fill="${t.textDim}">Portfolio</text>
-      <text x="560" y="36" class="sans" font-size="13" font-weight="600" fill="${t.accentText}">portfolio.agengineering.workers.dev</text>
+      <!-- Bottom Apple Spec Dock -->
+      <g transform="translate(0, 194)">
+        <rect x="0" y="0" width="600" height="52" rx="15" fill="#101014" stroke="#22222A" stroke-width="1"/>
+
+        <text x="18" y="21" class="sans" font-size="10.5" font-weight="500" fill="#71717A">Core Stack</text>
+        <text x="18" y="39" class="sans" font-size="13" font-weight="600" fill="#F5F5F7">Python · Java · React</text>
+
+        <line x1="184" y1="11" x2="184" y2="41" stroke="#22222A" stroke-width="1"/>
+
+        <text x="202" y="21" class="sans" font-size="10.5" font-weight="500" fill="#71717A">Architecture</text>
+        <text x="202" y="39" class="sans" font-size="13" font-weight="600" fill="#F5F5F7">DDD · RAG · Docker</text>
+
+        <line x1="354" y1="11" x2="354" y2="41" stroke="#22222A" stroke-width="1"/>
+
+        <text x="372" y="21" class="sans" font-size="10.5" font-weight="500" fill="#71717A">Portfolio</text>
+        <text x="372" y="39" class="sans" font-size="12.5" font-weight="600" fill="#60A5FA">portfolio.agengineering.workers.dev</text>
+      </g>
     </g>
   </g>
 
-  <!-- Right Minimal Apple Squircle Monogram Tile -->
-  <g transform="translate(972, 62)">
-    <rect x="0.5" y="0.5" width="152" height="152" rx="36" fill="${t.card}" stroke="${t.border}" stroke-width="1"/>
-    <rect x="60" y="18" width="32" height="3" rx="1.5" fill="${t.accent}"/>
-    <text x="76" y="94" text-anchor="middle" class="display" font-size="52" font-weight="700" letter-spacing="-2.4" fill="${t.text}">AG<tspan fill="${t.accentText}">.</tspan></text>
-    <text x="76" y="124" text-anchor="middle" class="sans" font-size="11" font-weight="500" letter-spacing="0.4" fill="${t.textDim}">Engineering</text>
-  </g>
+  <rect x="0.5" y="0.5" width="1199" height="335" rx="24" stroke="${outerBorder}" stroke-width="1"/>
 </svg>`;
 }
 
@@ -183,9 +254,9 @@ function renderFooter(t) {
 }
 
 for (const [name, tokens] of Object.entries(THEMES)) {
-  fs.writeFileSync(path.join(OUT_DIR, `hero-${name}.svg`), renderHero(tokens), 'utf8');
+  fs.writeFileSync(path.join(OUT_DIR, `hero-${name}.svg`), renderHero(name), 'utf8');
   fs.writeFileSync(path.join(OUT_DIR, `pillars-${name}.svg`), renderPillars(tokens), 'utf8');
   fs.writeFileSync(path.join(OUT_DIR, `footer-${name}.svg`), renderFooter(tokens), 'utf8');
 }
 
-console.log('Generated Apple-minimal SVGs in ./assets/apple/');
+console.log('Generated 3D Apple-minimal SVGs in ./assets/v3/');

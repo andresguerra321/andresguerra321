@@ -2,9 +2,9 @@
 
 <a href="https://portfolio.agengineering.workers.dev/">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./assets/apple/hero-dark.svg" />
-    <source media="(prefers-color-scheme: light)" srcset="./assets/apple/hero-light.svg" />
-    <img alt="Andrés Felipe Guerra — Fullstack Software Engineer" src="./assets/apple/hero-dark.svg" width="100%" />
+    <source media="(prefers-color-scheme: dark)" srcset="./assets/v3/hero-dark.svg" />
+    <source media="(prefers-color-scheme: light)" srcset="./assets/v3/hero-light.svg" />
+    <img alt="Andrés Felipe Guerra — Fullstack Software Engineer" src="./assets/v3/hero-dark.svg" width="100%" />
   </picture>
 </a>
 
@@ -23,9 +23,9 @@
 ### Enfoque Técnico
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/apple/pillars-dark.svg" />
-  <source media="(prefers-color-scheme: light)" srcset="./assets/apple/pillars-light.svg" />
-  <img alt="Especialidades técnicas: AI Systems & RAG, Backend Architecture, Security & Automation" src="./assets/apple/pillars-dark.svg" width="100%" />
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/v3/pillars-dark.svg" />
+  <source media="(prefers-color-scheme: light)" srcset="./assets/v3/pillars-light.svg" />
+  <img alt="Especialidades técnicas: AI Systems & RAG, Backend Architecture, Security & Automation" src="./assets/v3/pillars-dark.svg" width="100%" />
 </picture>
 
 <br/><br/>
@@ -89,9 +89,9 @@
 ### Telemetría
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/apple/telemetry-dark.svg" />
-  <source media="(prefers-color-scheme: light)" srcset="./assets/apple/telemetry-light.svg" />
-  <img alt="Métricas de actividad en GitHub y distribución de lenguajes" src="./assets/apple/telemetry-dark.svg" width="100%" />
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/v3/telemetry-dark.svg" />
+  <source media="(prefers-color-scheme: light)" srcset="./assets/v3/telemetry-light.svg" />
+  <img alt="Métricas de actividad en GitHub y distribución de lenguajes" src="./assets/v3/telemetry-dark.svg" width="100%" />
 </picture>
 
 <br/><br/>
@@ -111,9 +111,9 @@
 
 <a href="https://portfolio.agengineering.workers.dev/">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./assets/apple/footer-dark.svg" />
-    <source media="(prefers-color-scheme: light)" srcset="./assets/apple/footer-light.svg" />
-    <img alt="Andrés Felipe Guerra · AG Engineering" src="./assets/apple/footer-dark.svg" width="100%" />
+    <source media="(prefers-color-scheme: dark)" srcset="./assets/v3/footer-dark.svg" />
+    <source media="(prefers-color-scheme: light)" srcset="./assets/v3/footer-light.svg" />
+    <img alt="Andrés Felipe Guerra · AG Engineering" src="./assets/v3/footer-dark.svg" width="100%" />
   </picture>
 </a>
 
