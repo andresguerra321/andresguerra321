@@ -2,19 +2,19 @@
 
 <a href="https://portfolio.agengineering.workers.dev/">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./assets/hero-dark.svg" />
-    <source media="(prefers-color-scheme: light)" srcset="./assets/hero-light.svg" />
-    <img alt="Andrés Felipe Guerra — Fullstack Software Engineer" src="./assets/hero-dark.svg" width="100%" />
+    <source media="(prefers-color-scheme: dark)" srcset="./assets/apple/hero-dark.svg" />
+    <source media="(prefers-color-scheme: light)" srcset="./assets/apple/hero-light.svg" />
+    <img alt="Andrés Felipe Guerra — Fullstack Software Engineer" src="./assets/apple/hero-dark.svg" width="100%" />
   </picture>
 </a>
 
 <br/><br/>
 
 <a href="https://portfolio.agengineering.workers.dev/"><img src="https://img.shields.io/badge/Portfolio-2563EB?style=for-the-badge&logo=cloudflare&logoColor=FFFFFF" alt="Portfolio" /></a>&nbsp;
-<a href="https://www.linkedin.com/in/andr%C3%A9s-felipe-guerra-correa-556333267/"><img src="https://img.shields.io/badge/LinkedIn-121216?style=for-the-badge&logo=linkedin&logoColor=F5F5F7" alt="LinkedIn" /></a>&nbsp;
-<a href="https://es.fiverr.com/s/dDvmP03"><img src="https://img.shields.io/badge/Fiverr-121216?style=for-the-badge&logo=fiverr&logoColor=F5F5F7" alt="Fiverr" /></a>&nbsp;
-<a href="https://wa.me/573185602203"><img src="https://img.shields.io/badge/WhatsApp-121216?style=for-the-badge&logo=whatsapp&logoColor=F5F5F7" alt="WhatsApp" /></a>&nbsp;
-<a href="mailto:andres.felipe.gueco@gmail.com"><img src="https://img.shields.io/badge/Email-121216?style=for-the-badge&logo=gmail&logoColor=F5F5F7" alt="Email" /></a>
+<a href="https://www.linkedin.com/in/andr%C3%A9s-felipe-guerra-correa-556333267/"><img src="https://img.shields.io/badge/LinkedIn-111114?style=for-the-badge&logo=linkedin&logoColor=F5F5F7" alt="LinkedIn" /></a>&nbsp;
+<a href="https://es.fiverr.com/s/dDvmP03"><img src="https://img.shields.io/badge/Fiverr-111114?style=for-the-badge&logo=fiverr&logoColor=F5F5F7" alt="Fiverr" /></a>&nbsp;
+<a href="https://wa.me/573185602203"><img src="https://img.shields.io/badge/WhatsApp-111114?style=for-the-badge&logo=whatsapp&logoColor=F5F5F7" alt="WhatsApp" /></a>&nbsp;
+<a href="mailto:andres.felipe.gueco@gmail.com"><img src="https://img.shields.io/badge/Email-111114?style=for-the-badge&logo=gmail&logoColor=F5F5F7" alt="Email" /></a>
 
 </div>
 
@@ -23,9 +23,9 @@
 ### Enfoque Técnico
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/pillars-dark.svg" />
-  <source media="(prefers-color-scheme: light)" srcset="./assets/pillars-light.svg" />
-  <img alt="Especialidades técnicas: AI Systems & RAG, Backend Architecture, Security & Automation" src="./assets/pillars-dark.svg" width="100%" />
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/apple/pillars-dark.svg" />
+  <source media="(prefers-color-scheme: light)" srcset="./assets/apple/pillars-light.svg" />
+  <img alt="Especialidades técnicas: AI Systems & RAG, Backend Architecture, Security & Automation" src="./assets/apple/pillars-dark.svg" width="100%" />
 </picture>
 
 <br/><br/>
@@ -89,9 +89,9 @@
 ### Telemetría
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/telemetry-dark.svg" />
-  <source media="(prefers-color-scheme: light)" srcset="./assets/telemetry-light.svg" />
-  <img alt="Métricas de actividad en GitHub y distribución de lenguajes" src="./assets/telemetry-dark.svg" width="100%" />
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/apple/telemetry-dark.svg" />
+  <source media="(prefers-color-scheme: light)" srcset="./assets/apple/telemetry-light.svg" />
+  <img alt="Métricas de actividad en GitHub y distribución de lenguajes" src="./assets/apple/telemetry-dark.svg" width="100%" />
 </picture>
 
 <br/><br/>
@@ -100,10 +100,10 @@
 
 | Capa | Tecnologías |
 |---|---|
-| **Backend & Datos** | ![Python](https://img.shields.io/badge/Python-121216?style=flat-square&logo=python&logoColor=60A5FA) ![Java](https://img.shields.io/badge/Java_17-121216?style=flat-square&logo=openjdk&logoColor=60A5FA) ![Spring Boot](https://img.shields.io/badge/Spring_Boot_3-121216?style=flat-square&logo=springboot&logoColor=60A5FA) ![FastAPI](https://img.shields.io/badge/FastAPI-121216?style=flat-square&logo=fastapi&logoColor=60A5FA) ![Node.js](https://img.shields.io/badge/Node.js-121216?style=flat-square&logo=nodedotjs&logoColor=60A5FA) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL_16-121216?style=flat-square&logo=postgresql&logoColor=60A5FA) ![MySQL](https://img.shields.io/badge/MySQL-121216?style=flat-square&logo=mysql&logoColor=60A5FA) |
-| **Frontend & Desktop** | ![React](https://img.shields.io/badge/React_19-121216?style=flat-square&logo=react&logoColor=60A5FA) ![JavaScript](https://img.shields.io/badge/JavaScript-121216?style=flat-square&logo=javascript&logoColor=60A5FA) ![Tailwind CSS](https://img.shields.io/badge/Tailwind_v4-121216?style=flat-square&logo=tailwindcss&logoColor=60A5FA) ![Electron](https://img.shields.io/badge/Electron-121216?style=flat-square&logo=electron&logoColor=60A5FA) ![Streamlit](https://img.shields.io/badge/Streamlit-121216?style=flat-square&logo=streamlit&logoColor=60A5FA) |
-| **IA, RAG & Automatización** | ![LangChain](https://img.shields.io/badge/LangChain-121216?style=flat-square&logo=langchain&logoColor=60A5FA) ![OpenAI](https://img.shields.io/badge/OpenAI-121216?style=flat-square&logo=openai&logoColor=60A5FA) ![Gemini](https://img.shields.io/badge/Google_Gemini-121216?style=flat-square&logo=googlegemini&logoColor=60A5FA) ![n8n](https://img.shields.io/badge/n8n-121216?style=flat-square&logo=n8n&logoColor=60A5FA) ![Pydantic](https://img.shields.io/badge/Pydantic-121216?style=flat-square&logo=pydantic&logoColor=60A5FA) |
-| **Infraestructura & Ops** | ![Docker](https://img.shields.io/badge/Docker-121216?style=flat-square&logo=docker&logoColor=60A5FA) ![Nginx](https://img.shields.io/badge/Nginx-121216?style=flat-square&logo=nginx&logoColor=60A5FA) ![Cloudflare](https://img.shields.io/badge/Cloudflare_Workers-121216?style=flat-square&logo=cloudflare&logoColor=60A5FA) ![Git](https://img.shields.io/badge/Git-121216?style=flat-square&logo=git&logoColor=60A5FA) |
+| **Backend & Datos** | ![Python](https://img.shields.io/badge/Python-111114?style=flat-square&logo=python&logoColor=60A5FA) ![Java](https://img.shields.io/badge/Java_17-111114?style=flat-square&logo=openjdk&logoColor=60A5FA) ![Spring Boot](https://img.shields.io/badge/Spring_Boot_3-111114?style=flat-square&logo=springboot&logoColor=60A5FA) ![FastAPI](https://img.shields.io/badge/FastAPI-111114?style=flat-square&logo=fastapi&logoColor=60A5FA) ![Node.js](https://img.shields.io/badge/Node.js-111114?style=flat-square&logo=nodedotjs&logoColor=60A5FA) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL_16-111114?style=flat-square&logo=postgresql&logoColor=60A5FA) ![MySQL](https://img.shields.io/badge/MySQL-111114?style=flat-square&logo=mysql&logoColor=60A5FA) |
+| **Frontend & Desktop** | ![React](https://img.shields.io/badge/React_19-111114?style=flat-square&logo=react&logoColor=60A5FA) ![JavaScript](https://img.shields.io/badge/JavaScript-111114?style=flat-square&logo=javascript&logoColor=60A5FA) ![Tailwind CSS](https://img.shields.io/badge/Tailwind_v4-111114?style=flat-square&logo=tailwindcss&logoColor=60A5FA) ![Electron](https://img.shields.io/badge/Electron-111114?style=flat-square&logo=electron&logoColor=60A5FA) ![Streamlit](https://img.shields.io/badge/Streamlit-111114?style=flat-square&logo=streamlit&logoColor=60A5FA) |
+| **IA, RAG & Automatización** | ![LangChain](https://img.shields.io/badge/LangChain-111114?style=flat-square&logo=langchain&logoColor=60A5FA) ![OpenAI](https://img.shields.io/badge/OpenAI-111114?style=flat-square&logo=openai&logoColor=60A5FA) ![Gemini](https://img.shields.io/badge/Google_Gemini-111114?style=flat-square&logo=googlegemini&logoColor=60A5FA) ![n8n](https://img.shields.io/badge/n8n-111114?style=flat-square&logo=n8n&logoColor=60A5FA) ![Pydantic](https://img.shields.io/badge/Pydantic-111114?style=flat-square&logo=pydantic&logoColor=60A5FA) |
+| **Infraestructura & Ops** | ![Docker](https://img.shields.io/badge/Docker-111114?style=flat-square&logo=docker&logoColor=60A5FA) ![Nginx](https://img.shields.io/badge/Nginx-111114?style=flat-square&logo=nginx&logoColor=60A5FA) ![Cloudflare](https://img.shields.io/badge/Cloudflare_Workers-111114?style=flat-square&logo=cloudflare&logoColor=60A5FA) ![Git](https://img.shields.io/badge/Git-111114?style=flat-square&logo=git&logoColor=60A5FA) |
 
 <br/>
 
@@ -111,9 +111,9 @@
 
 <a href="https://portfolio.agengineering.workers.dev/">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./assets/footer-dark.svg" />
-    <source media="(prefers-color-scheme: light)" srcset="./assets/footer-light.svg" />
-    <img alt="Andrés Felipe Guerra · AG Engineering" src="./assets/footer-dark.svg" width="100%" />
+    <source media="(prefers-color-scheme: dark)" srcset="./assets/apple/footer-dark.svg" />
+    <source media="(prefers-color-scheme: light)" srcset="./assets/apple/footer-light.svg" />
+    <img alt="Andrés Felipe Guerra · AG Engineering" src="./assets/apple/footer-dark.svg" width="100%" />
   </picture>
 </a>
 

@@ -4,7 +4,7 @@
       .sans { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', 'Segoe UI', Helvetica, Arial, sans-serif; }
     </style>
   </defs>
-  <rect x="0.5" y="0.5" width="1199" height="59" rx="16" fill="#121216" stroke="#232329" stroke-width="1"/>
+  <rect x="0.5" y="0.5" width="1199" height="59" rx="16" fill="#111114" stroke="#222228" stroke-width="1"/>
   <text x="28" y="34.5" class="sans" font-size="13" font-weight="600" letter-spacing="-0.1" fill="#F5F5F7">Andrés Felipe Guerra  <tspan font-weight="400" fill="#71717A">·  AG Engineering</tspan></text>
   <text x="1172" y="34.5" text-anchor="end" class="sans" font-size="12.5" font-weight="500" fill="#60A5FA">portfolio.agengineering.workers.dev</text>
 </svg>

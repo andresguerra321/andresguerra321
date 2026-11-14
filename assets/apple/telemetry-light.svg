@@ -20,13 +20,13 @@
     <g transform="translate(26, 64)">
       <rect x="0" y="0" width="204" height="58" rx="12" fill="#FFFFFF" stroke="#E5E5EA" stroke-width="1"/>
       <text x="14" y="21" class="sans" font-size="11" font-weight="500" fill="#86868B">Contributions (12m)</text>
-      <text x="14" y="46" class="display" font-size="22" font-weight="600" letter-spacing="-0.5" fill="#1D1D1F">792</text>
+      <text x="14" y="46" class="display" font-size="22" font-weight="600" letter-spacing="-0.5" fill="#1D1D1F">793</text>
     </g>
 
     <g transform="translate(244, 64)">
       <rect x="0" y="0" width="204" height="58" rx="12" fill="#FFFFFF" stroke="#E5E5EA" stroke-width="1"/>
       <text x="14" y="21" class="sans" font-size="11" font-weight="500" fill="#86868B">Commits Logged</text>
-      <text x="14" y="46" class="display" font-size="22" font-weight="600" letter-spacing="-0.5" fill="#1D1D1F">755</text>
+      <text x="14" y="46" class="display" font-size="22" font-weight="600" letter-spacing="-0.5" fill="#1D1D1F">756</text>
     </g>
 
     <g transform="translate(26, 132)">

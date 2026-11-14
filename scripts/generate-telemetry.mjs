@@ -235,7 +235,7 @@ function renderTelemetry(data, t) {
 }
 
 const data = await fetchTelemetry();
-const outDir = path.resolve('assets');
+const outDir = path.resolve('assets/apple');
 fs.mkdirSync(outDir, { recursive: true });
 fs.writeFileSync(path.join(outDir, 'telemetry-dark.svg'), renderTelemetry(data, THEMES.dark), 'utf8');
 fs.writeFileSync(path.join(outDir, 'telemetry-light.svg'), renderTelemetry(data, THEMES.light), 'utf8');

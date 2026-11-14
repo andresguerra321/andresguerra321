@@ -1,23 +1,23 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const OUT_DIR = path.resolve('assets');
+const OUT_DIR = path.resolve('assets/apple');
 fs.mkdirSync(OUT_DIR, { recursive: true });
 
 const THEMES = {
   dark: {
-    surface: '#0B0B0E',
-    card: '#121216',
-    tile: '#18181D',
-    border: '#232329',
-    divider: '#1D1D22',
+    surface: '#09090B',
+    card: '#111114',
+    tile: '#16161A',
+    border: '#222228',
+    divider: '#1C1C22',
     text: '#F5F5F7',
     textMuted: '#A1A1AA',
     textDim: '#71717A',
     accent: '#2563EB',
     accentText: '#60A5FA',
-    pillBg: '#16161B',
-    pillBorder: '#26262E',
+    pillBg: '#141418',
+    pillBorder: '#27272E',
   },
   light: {
     surface: '#FFFFFF',
@@ -30,7 +30,7 @@ const THEMES = {
     textDim: '#86868B',
     accent: '#1D4ED8',
     accentText: '#1D4ED8',
-    pillBg: '#FFFFFF',
+    pillBg: '#F5F5F7',
     pillBorder: '#D2D2D7',
   },
 };
@@ -40,7 +40,7 @@ const FONT_TEXT = `-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', 'S
 const FONT_MONO = `'SF Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace`;
 
 function renderHero(t) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="272" viewBox="0 0 1200 272" fill="none" role="img" aria-label="Andrés Felipe Guerra — Fullstack Engineer">
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="276" viewBox="0 0 1200 276" fill="none" role="img" aria-label="Andrés Felipe Guerra — Fullstack Engineer">
   <defs>
     <style>
       .display { font-family: ${FONT_DISPLAY}; }
@@ -48,40 +48,53 @@ function renderHero(t) {
       .mono { font-family: ${FONT_MONO}; }
       @keyframes breathe {
         0%, 100% { opacity: 1; }
-        50% { opacity: 0.42; }
+        50% { opacity: 0.4; }
       }
-      .liveDot { animation: breathe 3.2s ease-in-out infinite; }
+      .liveDot { animation: breathe 3.4s ease-in-out infinite; }
     </style>
   </defs>
 
-  <!-- Flat Apple Obsidian / Alabaster Surface -->
-  <rect x="0.5" y="0.5" width="1199" height="271" rx="22" fill="${t.surface}" stroke="${t.border}" stroke-width="1"/>
+  <!-- Flat Apple Surface (zero gradients, zero mesh/glow) -->
+  <rect x="0.5" y="0.5" width="1199" height="275" rx="24" fill="${t.surface}" stroke="${t.border}" stroke-width="1"/>
 
-  <!-- Left Typographic Composition -->
-  <g transform="translate(56, 48)">
-    <!-- Minimal Availability Capsule -->
-    <rect x="0" y="0" width="214" height="28" rx="14" fill="${t.pillBg}" stroke="${t.pillBorder}" stroke-width="1"/>
-    <circle cx="16" cy="14" r="3.5" fill="${t.accentText}" class="liveDot"/>
-    <text x="29" y="18" class="sans" font-size="12" font-weight="500" letter-spacing="0.2" fill="${t.textMuted}">Available for work  ·  2026</text>
+  <!-- Left Apple Editorial Stack -->
+  <g transform="translate(56, 44)">
+    <!-- Minimal Status Pill -->
+    <rect x="0" y="0" width="218" height="28" rx="14" fill="${t.pillBg}" stroke="${t.pillBorder}" stroke-width="1"/>
+    <circle cx="15" cy="14" r="3.5" fill="${t.accentText}" class="liveDot"/>
+    <text x="27" y="18" class="sans" font-size="12" font-weight="500" fill="${t.textMuted}">Available  ·  Colombia</text>
 
-    <!-- Display Headline -->
-    <text x="0" y="84" class="display" font-size="46" font-weight="600" letter-spacing="-1.4" fill="${t.text}">Andrés Felipe Guerra</text>
+    <!-- Command Headline -->
+    <text x="0" y="84" class="display" font-size="50" font-weight="600" letter-spacing="-1.6" fill="${t.text}">Andrés Felipe Guerra</text>
 
-    <!-- Role Statement -->
-    <text x="0" y="118" class="sans" font-size="19" font-weight="400" letter-spacing="-0.2" fill="${t.textMuted}">Fullstack Engineer designing AI systems, clean backends &amp; security tools.</text>
+    <!-- Apple Two-Tone Tagline -->
+    <text x="0" y="122" class="display" font-size="21" font-weight="500" letter-spacing="-0.3" fill="${t.textMuted}">Fullstack Software Engineer.  <tspan fill="${t.accentText}">AI Systems &amp; Security.</tspan></text>
 
-    <!-- Hairline Rule -->
-    <line x1="0" y1="148" x2="760" y2="148" stroke="${t.divider}" stroke-width="1"/>
+    <!-- Clean Apple Spec Bar -->
+    <g transform="translate(0, 150)">
+      <rect x="0" y="0" width="840" height="46" rx="14" fill="${t.card}" stroke="${t.border}" stroke-width="1"/>
 
-    <!-- Minimal Metadata Row -->
-    <text x="0" y="178" class="sans" font-size="13" font-weight="500" fill="${t.textDim}">Bucaramanga, Colombia     ·     <tspan fill="${t.textMuted}">AG Engineering</tspan>     ·     <tspan fill="${t.accentText}">portfolio.agengineering.workers.dev</tspan></text>
+      <text x="20" y="19" class="sans" font-size="10.5" font-weight="500" fill="${t.textDim}">Focus</text>
+      <text x="20" y="36" class="sans" font-size="13" font-weight="600" fill="${t.text}">Hybrid RAG · DDD · CTI</text>
+
+      <line x1="250" y1="10" x2="250" y2="36" stroke="${t.divider}" stroke-width="1"/>
+
+      <text x="272" y="19" class="sans" font-size="10.5" font-weight="500" fill="${t.textDim}">Core Stack</text>
+      <text x="272" y="36" class="sans" font-size="13" font-weight="600" fill="${t.text}">Python · Java · React · SQL</text>
+
+      <line x1="538" y1="10" x2="538" y2="36" stroke="${t.divider}" stroke-width="1"/>
+
+      <text x="560" y="19" class="sans" font-size="10.5" font-weight="500" fill="${t.textDim}">Portfolio</text>
+      <text x="560" y="36" class="sans" font-size="13" font-weight="600" fill="${t.accentText}">portfolio.agengineering.workers.dev</text>
+    </g>
   </g>
 
-  <!-- Right Minimal Apple Squircle Monogram Tile (Zero gradients, zero rings) -->
-  <g transform="translate(964, 56)">
-    <rect x="0.5" y="0.5" width="160" height="160" rx="34" fill="${t.card}" stroke="${t.border}" stroke-width="1"/>
-    <text x="80" y="96" text-anchor="middle" class="display" font-size="54" font-weight="700" letter-spacing="-2.5" fill="${t.text}">AG<tspan fill="${t.accentText}">.</tspan></text>
-    <text x="80" y="128" text-anchor="middle" class="mono" font-size="10.5" font-weight="500" letter-spacing="1.4" fill="${t.textDim}">COLOMBIA</text>
+  <!-- Right Minimal Apple Squircle Monogram Tile -->
+  <g transform="translate(972, 62)">
+    <rect x="0.5" y="0.5" width="152" height="152" rx="36" fill="${t.card}" stroke="${t.border}" stroke-width="1"/>
+    <rect x="60" y="18" width="32" height="3" rx="1.5" fill="${t.accent}"/>
+    <text x="76" y="94" text-anchor="middle" class="display" font-size="52" font-weight="700" letter-spacing="-2.4" fill="${t.text}">AG<tspan fill="${t.accentText}">.</tspan></text>
+    <text x="76" y="124" text-anchor="middle" class="sans" font-size="11" font-weight="500" letter-spacing="0.4" fill="${t.textDim}">Engineering</text>
   </g>
 </svg>`;
 }
@@ -175,4 +188,4 @@ for (const [name, tokens] of Object.entries(THEMES)) {
   fs.writeFileSync(path.join(OUT_DIR, `footer-${name}.svg`), renderFooter(tokens), 'utf8');
 }
 
-console.log('Generated Apple-minimal hero, pillars, and footer SVGs (dark + light).');
+console.log('Generated Apple-minimal SVGs in ./assets/apple/');
