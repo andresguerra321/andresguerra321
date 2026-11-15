@@ -1,68 +1,70 @@
 <div align="center">
 
-<a href="https://portfolio.agengineering.workers.dev/"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/v6/hero-dark.svg" /><source media="(prefers-color-scheme: light)" srcset="./assets/v6/hero-light.svg" /><img alt="Andrés Felipe Guerra — Fullstack Software Engineer" src="./assets/v6/hero-dark.svg" width="100%" /></picture></a>
-
-<br/><br/>
-
-<p align="center">
-  <a href="https://portfolio.agengineering.workers.dev/"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/v6/btn-portfolio-dark.svg" /><source media="(prefers-color-scheme: light)" srcset="./assets/v6/btn-portfolio-light.svg" /><img alt="Portfolio" src="./assets/v6/btn-portfolio-dark.svg" height="36" /></picture></a>&nbsp;
-  <a href="https://www.linkedin.com/in/andr%C3%A9s-felipe-guerra-correa-556333267/"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/v6/btn-linkedin-dark.svg" /><source media="(prefers-color-scheme: light)" srcset="./assets/v6/btn-linkedin-light.svg" /><img alt="LinkedIn" src="./assets/v6/btn-linkedin-dark.svg" height="36" /></picture></a>&nbsp;
-  <a href="mailto:andres.felipe.gueco@gmail.com"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/v6/btn-email-dark.svg" /><source media="(prefers-color-scheme: light)" srcset="./assets/v6/btn-email-light.svg" /><img alt="Email" src="./assets/v6/btn-email-dark.svg" height="36" /></picture></a>&nbsp;
-  <a href="https://es.fiverr.com/s/dDvmP03"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/v6/btn-fiverr-dark.svg" /><source media="(prefers-color-scheme: light)" srcset="./assets/v6/btn-fiverr-light.svg" /><img alt="Fiverr" src="./assets/v6/btn-fiverr-dark.svg" height="36" /></picture></a>&nbsp;
-  <a href="https://wa.me/573185602203"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/v6/btn-whatsapp-dark.svg" /><source media="(prefers-color-scheme: light)" srcset="./assets/v6/btn-whatsapp-light.svg" /><img alt="WhatsApp" src="./assets/v6/btn-whatsapp-dark.svg" height="36" /></picture></a>
-</p>
+<picture><source media="(prefers-color-scheme: dark)" srcset="./assets/v7/hero-dark.svg" /><source media="(prefers-color-scheme: light)" srcset="./assets/v7/hero-light.svg" /><img alt="Andrés Felipe Guerra — Fullstack Software Engineer · AI Systems & AppSec" src="./assets/v7/hero-dark.svg" width="100%" /></picture>
 
 </div>
 
 <br/>
+
+Construyo plataformas backend e inteligencia artificial aplicada a seguridad defensiva (`Java 21`, `Python`, `PostgreSQL`), con foco en trazabilidad verificable y aislamiento de datos sensibles.  
+En transición hacia **Cloud Security** y **AI Security Engineering** para diseñar servicios resilientes desde la arquitectura hasta el despliegue.
+
+---
 
 ## OMEGA · Inteligencia defensiva contra spyware comercial
 
 <div align="center">
-  <a href="https://github.com/andresguerra321/OMEGA"><img alt="OMEGA — Plataforma defensiva de Cyber Threat Intelligence" src="./assets/v6/omega-banner.png" width="100%" /></a>
+  <a href="https://github.com/andresguerra321/OMEGA"><img src="./assets/omega-banner.png" alt="OMEGA — Plataforma defensiva contra spyware comercial" width="100%" /></a>
 </div>
 
 <br/>
 
-Plataforma defensiva para detectar y analizar spyware comercial (*Pegasus*, *Predator*, *Candiru*), correlacionar inteligencia de amenazas (CTI) y ejecutar triaje forense en dispositivos sin persistir evidencia sensible.
+Plataforma defensiva de *threat intelligence* orientada a detectar y analizar spyware comercial (tipo Pegasus) mediante correlación CTI, triaje forense (`MVT`, `iOS`/`ADB`), auditoría OSINT y RAG híbrido (`pgvector` + `RRF`) en modo **Zero-Retention**.
 
-- **El problema:** Investigar spyware móvil exige cruzar manualmente reportes CTI extensos y respaldos sensibles de víctimas sin filtrar datos ni depender de respuestas LLM sin respaldo documental.
-- **El enfoque:** Gateway `Spring Boot 3` con ingesta en `tmpfs` (borrado físico en `finally`), worker forense `FastAPI` aislado sin puertos públicos (MVT, YARA e iOS en `:memory:`), búsqueda híbrida RRF (`pgvector` + `tsvector`) y auditoría encadenada por `SHA-256`.
-- **Resultado (`v1.3.1`):** **85.7% Hit@5** en recuperación híbrida (vs. 28.6% vectorial base), **100% de abstención anti-alucinación** fuera de corpus, **6,404 indicadores STIX 2.1** en 6 campañas, latencia media neta de **1.22s** y app Windows empaquetada en Electron.
+<!-- TODO: reemplaza estos tres puntos con tus definiciones verificadas en una línea -->
+- **Problema:** <!-- TODO: una línea sobre el problema concreto que resuelve OMEGA (p. ej. fricción y exposición al correlacionar reportes CTI y volcados móviles sin infraestructura aislada) -->
+- **Enfoque (`Zero-Retention`):** Búsqueda híbrida (`pgvector` + `RRF`) sobre fuentes CTI y worker forense separado por red interna. <!-- TODO: una línea precisando qué garantiza exactamente Zero-Retention sobre artefactos y memoria -->
+- **Estado (`v1.3.1`):** <!-- TODO: una línea indicando qué funciona hoy de extremo a extremo y cuál es el siguiente hito -->
 
-<br/>
-
-<a href="https://github.com/andresguerra321/OMEGA"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/v6/omega-arch-dark.svg" /><source media="(prefers-color-scheme: light)" srcset="./assets/v6/omega-arch-light.svg" /><img alt="Arquitectura Zero-Retention y métricas verificadas de OMEGA" src="./assets/v6/omega-arch-dark.svg" width="100%" /></picture></a>
-
-<br/><br/>
-
-`Java 21` `Spring Boot 3.3` `FastAPI` `PostgreSQL 16` `pgvector` `React 19` `Electron 45`
-
-**[Ver repositorio](https://github.com/andresguerra321/OMEGA)** · **[Arquitectura Zero-Retention](https://github.com/andresguerra321/OMEGA/blob/main/omega/backend-java/README.md)** · **[Evaluación RAGAS](https://github.com/andresguerra321/OMEGA/blob/main/omega/rag_engine/eval/ablation_report_v1.md)** · **[Release Desktop v1.3.1](https://github.com/andresguerra321/OMEGA/releases/tag/v1.3.1)**
+<!-- TODO: reemplaza ./assets/omega-screenshot.png por una captura real de la interfaz principal cuando quieras mostrar la UI (sugerido 1200×675 px) -->
+<div align="center">
+  <a href="https://github.com/andresguerra321/OMEGA"><img src="./assets/omega-screenshot.png" alt="OMEGA — Diagrama de arquitectura Zero-Retention" width="100%" /></a>
+</div>
 
 <br/>
 
-### Proyectos Secundarios
+`Java 21` `Spring Boot 3` `FastAPI` `pgvector` `React 19` `Electron`
+
+**[Ver repositorio](https://github.com/andresguerra321/OMEGA)** · **[Arquitectura](https://github.com/andresguerra321/OMEGA/blob/main/omega/backend-java/README.md)** · **[Demo / Release v1.3.1](https://github.com/andresguerra321/OMEGA/releases/tag/v1.3.1)**
+
+<br/>
+
+### Proyectos secundarios
 
 <p align="center">
-  <a href="https://github.com/andresguerra321/GUARDIAN"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/v6/sec-guardian-dark.svg" /><source media="(prefers-color-scheme: light)" srcset="./assets/v6/sec-guardian-light.svg" /><img alt="GUARDIAN — Seguridad Vial Multi-Agente" src="./assets/v6/sec-guardian-dark.svg" width="32%" /></picture></a>&nbsp;&nbsp;&nbsp;<a href="https://github.com/andresguerra321/proyecto-springboot"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/v6/sec-toolrent-dark.svg" /><source media="(prefers-color-scheme: light)" srcset="./assets/v6/sec-toolrent-light.svg" /><img alt="ToolRent — SaaS Industrial (DDD)" src="./assets/v6/sec-toolrent-dark.svg" width="32%" /></picture></a>&nbsp;&nbsp;&nbsp;<a href="https://github.com/andresguerra321/HOJAS-DE-VIDA"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/v6/sec-cv-dark.svg" /><source media="(prefers-color-scheme: light)" srcset="./assets/v6/sec-cv-light.svg" /><img alt="CV Intelligence — Evaluador de Hojas de Vida" src="./assets/v6/sec-cv-dark.svg" width="32%" /></picture></a>
+  <a href="https://github.com/andresguerra321/GUARDIAN"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/v7/sec-guardian-dark.svg" /><source media="(prefers-color-scheme: light)" srcset="./assets/v7/sec-guardian-light.svg" /><img alt="GUARDIAN — Seguridad Vial Multi-Agente" src="./assets/v7/sec-guardian-dark.svg" width="32%" /></picture></a>&nbsp;&nbsp;&nbsp;<a href="https://github.com/andresguerra321/HOJAS-DE-VIDA"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/v7/sec-cv-dark.svg" /><source media="(prefers-color-scheme: light)" srcset="./assets/v7/sec-cv-light.svg" /><img alt="CV Intelligence — Evaluador de Hojas de Vida" src="./assets/v7/sec-cv-dark.svg" width="32%" /></picture></a>&nbsp;&nbsp;&nbsp;<a href="https://github.com/andresguerra321/proyecto-springboot"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/v7/sec-toolrent-dark.svg" /><source media="(prefers-color-scheme: light)" srcset="./assets/v7/sec-toolrent-light.svg" /><img alt="ToolRent — SaaS Industrial (DDD)" src="./assets/v7/sec-toolrent-dark.svg" width="32%" /></picture></a>
 </p>
 
 <br/>
 
-### Otros sistemas
+### Ahora
 
-- **[WA-Bot](https://github.com/andresguerra321/Bot-de-Whatsapp-plantilla-)** — Agente conversacional self-hosted en WhatsApp con memoria de sesión y botones interactivos sin tarifa por mensaje (`Node.js · Baileys · Groq · Docker`).
-- **[SST & PESV Multi-Tenant DB](https://github.com/andresguerra321/Proyectoposgres)** — Modelo PostgreSQL aislado por tenant para gestión normativa SG-SST y PESV con ciclo PHVA, triggers de auditoría y vistas materializadas.
-- **[Tribuna Global](https://github.com/andresguerra321/chatbot-futbol)** — Chatbot de análisis de sentimientos con guardrails y suite de pruebas anti-Prompt Injection (`Python · LangChain · Streamlit · Groq`).
-- **[DeliveryBot](https://github.com/andresguerra321/delivery_bot_n8n)** — Orquestación automatizada de pedidos institucionales en tiempo real (`n8n · Telegram Bot API · Python · Google Sheets`).
-- **[Hexagonal Demo App](https://github.com/andresguerra321/hexagonal-demoapp)** — Implementación de referencia en arquitectura hexagonal, puertos/adaptadores y Abstract Factory (`Java · JDBC · PostgreSQL · MySQL`).
-- **[AG Engineering Portfolio](https://portfolio.agengineering.workers.dev/)** — Sitio web oficial optimizado sobre infraestructura edge global (`Cloudflare Workers`).
+<!-- TODO: ajusta estos focos semanales según lo que estés estudiando o construyendo -->
+- Endurecimiento continuo de **OMEGA** (`v1.3.1`): aislamiento entre gateway Java y worker forense, y evaluación de RAG con citas verificables.
+- Explorando diseño de **AI Security Gateway** y fundamentos de **Cloud Security** (control de acceso, validación de entradas en pipelines LLM y segmentación de redes).
 
-<br/>
+---
 
 <div align="center">
 
-<a href="https://portfolio.agengineering.workers.dev/"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/v6/footer-dark.svg" /><source media="(prefers-color-scheme: light)" srcset="./assets/v6/footer-light.svg" /><img alt="Andrés Felipe Guerra · AG Engineering" src="./assets/v6/footer-dark.svg" width="100%" /></picture></a>
+<p align="center">
+  <a href="https://portfolio.agengineering.workers.dev/"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/v7/btn-portfolio-dark.svg" /><source media="(prefers-color-scheme: light)" srcset="./assets/v7/btn-portfolio-light.svg" /><img alt="Portfolio" src="./assets/v7/btn-portfolio-dark.svg" height="36" /></picture></a>&nbsp;
+  <a href="https://www.linkedin.com/in/andr%C3%A9s-felipe-guerra-correa-556333267/"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/v7/btn-linkedin-dark.svg" /><source media="(prefers-color-scheme: light)" srcset="./assets/v7/btn-linkedin-light.svg" /><img alt="LinkedIn" src="./assets/v7/btn-linkedin-dark.svg" height="36" /></picture></a>&nbsp;
+  <a href="mailto:andres.felipe.gueco@gmail.com"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/v7/btn-email-dark.svg" /><source media="(prefers-color-scheme: light)" srcset="./assets/v7/btn-email-light.svg" /><img alt="Email" src="./assets/v7/btn-email-dark.svg" height="36" /></picture></a>&nbsp;
+  <a href="https://es.fiverr.com/s/dDvmP03"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/v7/btn-fiverr-dark.svg" /><source media="(prefers-color-scheme: light)" srcset="./assets/v7/btn-fiverr-light.svg" /><img alt="Fiverr" src="./assets/v7/btn-fiverr-dark.svg" height="36" /></picture></a>&nbsp;
+  <a href="https://wa.me/573185602203"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/v7/btn-whatsapp-dark.svg" /><source media="(prefers-color-scheme: light)" srcset="./assets/v7/btn-whatsapp-light.svg" /><img alt="WhatsApp" src="./assets/v7/btn-whatsapp-dark.svg" height="36" /></picture></a>
+</p>
+
+<sub>Andrés Felipe Guerra · Bucaramanga, Colombia</sub>
 
 </div>

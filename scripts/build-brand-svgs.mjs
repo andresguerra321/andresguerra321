@@ -8,7 +8,7 @@ import {
   renderGlassSurface,
 } from './glass-tokens.mjs';
 
-const OUT_DIR = path.resolve('assets/v6');
+const OUT_DIR = path.resolve('assets/v7');
 fs.mkdirSync(OUT_DIR, { recursive: true });
 
 const ICONS = {
@@ -30,12 +30,14 @@ const ICONS = {
     `<path d="M2.4 9C3.9 5.9 6.3 4.4 9 4.4C11.7 4.4 14.1 5.9 15.6 9C14.1 12.1 11.7 13.6 9 13.6C6.3 13.6 3.9 12.1 2.4 9Z" stroke="${c}" stroke-width="1.5" stroke-linejoin="round"/><circle cx="9" cy="9" r="2.2" stroke="${c}" stroke-width="1.5"/>`,
 };
 
-function renderIconBadge(x, y, iconName, t, { size = 32, accent = true } = {}) {
-  const strokeColor = accent ? t.accentText : t.text;
+function renderIconBadge(x, y, iconName, t, { size = 34, accentStroke, wellFill, wellStroke } = {}) {
+  const strokeColor = accentStroke || t.accentText;
+  const fill = wellFill || t.iconWellFill;
+  const stroke = wellStroke || t.iconWellStroke;
   const offset = (size - 18) / 2;
   return `
   <g transform="translate(${x}, ${y})">
-    <rect x="0.5" y="0.5" width="${size - 1}" height="${size - 1}" rx="9" fill="${t.iconWellFill}" stroke="${t.iconWellStroke}" stroke-width="1"/>
+    <rect x="0.5" y="0.5" width="${size - 1}" height="${size - 1}" rx="9" fill="${fill}" stroke="${stroke}" stroke-width="1"/>
     <g transform="translate(${offset}, ${offset})">
       ${ICONS[iconName](strokeColor)}
     </g>
@@ -49,51 +51,48 @@ function renderHero(t) {
   const baseEnd = isDark ? '#071B5B' : '#E6EEFC';
   const nameFill = isDark ? '#FFFFFF' : '#0B1F66';
   const rolePrimaryFill = isDark ? '#E0EBFF' : '#1E293B';
-  const roleSecondaryFill = isDark ? '#93C5FD' : '#1D4ED8';
-  const pitchFill = isDark ? '#DCE7FF' : '#334155';
+  const roleSecondaryFill = isDark ? '#6EE7B7' : '#047857';
   const sheenOpacity = isDark ? '0.07' : '0.45';
   const frameStroke = isDark ? 'rgba(191, 219, 254, 0.18)' : 'rgba(29, 78, 216, 0.14)';
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="258" viewBox="0 0 1200 258" fill="none" role="img" aria-label="Andrés Felipe Guerra — Fullstack Software Engineer">
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="196" viewBox="0 0 1200 196" fill="none" role="img" aria-label="Andrés Felipe Guerra — Fullstack Software Engineer">
   <defs>
     ${glassDefs(t, 'hero')}
-    <linearGradient id="heroRoyalStage" x1="0" y1="0" x2="1200" y2="258" gradientUnits="userSpaceOnUse">
+    <linearGradient id="heroRoyalStage" x1="0" y1="0" x2="1200" y2="196" gradientUnits="userSpaceOnUse">
       <stop offset="0%" stop-color="${baseStart}"/>
       <stop offset="50%" stop-color="${baseMid}"/>
       <stop offset="100%" stop-color="${baseEnd}"/>
     </linearGradient>
-    <linearGradient id="heroOpticalSheen" x1="160" y1="0" x2="980" y2="258" gradientUnits="userSpaceOnUse">
+    <linearGradient id="heroOpticalSheen" x1="160" y1="0" x2="980" y2="196" gradientUnits="userSpaceOnUse">
       <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0"/>
       <stop offset="48%" stop-color="#FFFFFF" stop-opacity="${sheenOpacity}"/>
       <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
     </linearGradient>
     <clipPath id="heroOuterClip">
-      <rect x="0.5" y="0.5" width="1199" height="257" rx="26"/>
+      <rect x="0.5" y="0.5" width="1199" height="195" rx="24"/>
     </clipPath>
   </defs>
 
   <g clip-path="url(#heroOuterClip)">
-    <rect x="0" y="0" width="1200" height="258" fill="url(#heroRoyalStage)"/>
+    <rect x="0" y="0" width="1200" height="196" fill="url(#heroRoyalStage)"/>
 
-    <g filter="url(#heroSoftBlur)" opacity="${isDark ? '0.38' : '0.20'}">
-      <ellipse cx="600" cy="48" rx="340" ry="86" fill="${t.ambientSecondary}"/>
-      <ellipse cx="320" cy="198" rx="240" ry="90" fill="${t.ambientPrimary}"/>
-      <ellipse cx="890" cy="192" rx="240" ry="90" fill="${t.ambientPrimary}"/>
+    <g filter="url(#heroSoftBlur)" opacity="${isDark ? '0.34' : '0.18'}">
+      <ellipse cx="600" cy="40" rx="340" ry="76" fill="${t.ambientSecondary}"/>
+      <ellipse cx="320" cy="160" rx="240" ry="80" fill="${t.ambientPrimary}"/>
+      <ellipse cx="890" cy="154" rx="240" ry="80" fill="${t.ambientPrimary}"/>
     </g>
 
-    <rect x="26.5" y="20.5" width="1147" height="217" rx="20" fill="${t.panelBase}" fill-opacity="${isDark ? '0.46' : '0.68'}" filter="url(#heroCardShadow)"/>
-    <rect x="26.5" y="20.5" width="1147" height="217" rx="20" fill="url(#heroShellBg)"/>
-    <rect x="26.5" y="20.5" width="1147" height="217" rx="20" fill="url(#heroOpticalSheen)"/>
-    <rect x="26.5" y="20.5" width="1147" height="217" rx="20" stroke="${frameStroke}" stroke-width="1"/>
-    <line x1="68" y1="21.5" x2="1132" y2="21.5" stroke="url(#heroTopBevel)" stroke-width="1"/>
+    <rect x="26.5" y="18.5" width="1147" height="159" rx="18" fill="${t.panelBase}" fill-opacity="${isDark ? '0.46' : '0.68'}" filter="url(#heroCardShadow)"/>
+    <rect x="26.5" y="18.5" width="1147" height="159" rx="18" fill="url(#heroShellBg)"/>
+    <rect x="26.5" y="18.5" width="1147" height="159" rx="18" fill="url(#heroOpticalSheen)"/>
+    <rect x="26.5" y="18.5" width="1147" height="159" rx="18" stroke="${frameStroke}" stroke-width="1"/>
+    <line x1="68" y1="19.5" x2="1132" y2="19.5" stroke="url(#heroTopBevel)" stroke-width="1"/>
 
-    <!-- Zero icons: Name, Role, and concrete Problem-Solving Statement -->
-    <text x="600" y="96" text-anchor="middle" class="display" font-size="50" font-weight="600" letter-spacing="-1.75" fill="${nameFill}">Andrés Felipe Guerra</text>
-    <text x="600" y="135" text-anchor="middle" class="display" font-size="19.5" font-weight="500" letter-spacing="-0.25" fill="${rolePrimaryFill}">Fullstack Software Engineer  <tspan fill="${roleSecondaryFill}">·  AI Systems &amp; AppSec</tspan></text>
-    <text x="600" y="177" text-anchor="middle" class="sans" font-size="15.2" font-weight="400" fill="${pitchFill}">Construyo motores RAG con citas verificables, análisis forense Zero-Retention y backends multi-tenant.</text>
+    <text x="600" y="92" text-anchor="middle" class="display" font-size="48" font-weight="600" letter-spacing="-1.65" fill="${nameFill}">Andrés Felipe Guerra</text>
+    <text x="600" y="131" text-anchor="middle" class="display" font-size="19.5" font-weight="500" letter-spacing="-0.25" fill="${rolePrimaryFill}">Fullstack Software Engineer  <tspan fill="${roleSecondaryFill}">·  AI Systems &amp; AppSec</tspan></text>
   </g>
 
-  <rect x="0.5" y="0.5" width="1199" height="257" rx="26" stroke="url(#heroRimStroke)" stroke-width="1"/>
+  <rect x="0.5" y="0.5" width="1199" height="195" rx="24" stroke="url(#heroRimStroke)" stroke-width="1"/>
   <line x1="36" y1="1.5" x2="1164" y2="1.5" stroke="url(#heroTopBevel)" stroke-width="1"/>
 </svg>`;
 }
@@ -131,161 +130,11 @@ function renderActionButtons(t) {
   return out;
 }
 
-function renderOmegaArchitecture(sec) {
-  const isDark = sec.mode === 'dark';
-  const nodeFill = isDark ? '#0A233A' : '#FFFFFF';
-  const nodeStroke = isDark ? 'rgba(110, 231, 183, 0.24)' : 'rgba(5, 150, 105, 0.22)';
-  const gatewayFill = isDark ? '#0D2C47' : '#FFFFFF';
-  const gatewayStroke = isDark ? 'rgba(52, 211, 153, 0.44)' : 'rgba(5, 150, 105, 0.36)';
-  const chipBg = isDark ? 'rgba(16, 185, 129, 0.14)' : 'rgba(5, 150, 105, 0.09)';
-  const arrowStroke = isDark ? '#34D399' : '#059669';
-  const innerRowBg = isDark ? 'rgba(4, 18, 33, 0.46)' : 'rgba(236, 253, 245, 0.65)';
-  const kpiBg = isDark ? 'rgba(6, 22, 38, 0.72)' : '#FFFFFF';
-
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="406" viewBox="0 0 1200 406" fill="none" role="img" aria-label="Arquitectura Zero-Retention y Benchmarks de OMEGA">
-  <defs>
-    ${glassDefs(sec, 'omg')}
-    <clipPath id="omgClip">
-      <rect x="0.5" y="2.5" width="1199" height="401" rx="22"/>
-    </clipPath>
-    <marker id="secArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-      <path d="M 1 1 L 9 5 L 1 9 z" fill="${arrowStroke}"/>
-    </marker>
-  </defs>
-
-  ${renderGlassSurface({
-    x: 0,
-    y: 2,
-    w: 1200,
-    h: 402,
-    rx: 22,
-    prefix: 'omg',
-    t: sec,
-    filterShadow: !isDark,
-    inner: `
-      <g clip-path="url(#omgClip)">
-        <g filter="url(#omgSoftBlur)" opacity="${sec.ambientOpacity}">
-          <circle cx="210" cy="70" r="140" fill="${sec.ambientPrimary}"/>
-          <circle cx="960" cy="300" r="160" fill="${sec.ambientSecondary}"/>
-        </g>
-      </g>
-
-      <!-- Header -->
-      <circle cx="34" cy="34" r="5" fill="${sec.accent}"/>
-      <circle cx="34" cy="34" r="9" fill="${sec.accent}" fill-opacity="0.18"/>
-      <text x="54" y="39" class="display" font-size="16" font-weight="600" letter-spacing="-0.25" fill="${sec.text}">Arquitectura Zero-Retention &amp; Pipeline Forense</text>
-      <text x="54" y="57" class="sans" font-size="12.2" fill="${sec.textMuted}">Segregación de redes Docker (omega-public / omega-private) · evitación de persistencia en disco</text>
-
-      <rect x="974" y="24" width="198" height="26" rx="13" fill="${sec.pillAccentFill}" stroke="${sec.pillAccentStroke}" stroke-width="1"/>
-      <text x="1073" y="40.5" text-anchor="middle" class="mono" font-size="11" font-weight="600" fill="${sec.accentText}">v1.3.1 · Security Focus</text>
-
-      <line x1="28" y1="74" x2="1172" y2="74" stroke="${sec.divider}" stroke-width="1"/>
-
-      <!-- Zone 1: Client Web / Desktop -->
-      <g transform="translate(28, 90)">
-        <rect x="0.5" y="0.5" width="268" height="202" rx="16" fill="${nodeFill}" stroke="${nodeStroke}" stroke-width="1"/>
-        <rect x="0.5" y="0.5" width="268" height="202" rx="16" fill="url(#omgTileBg)"/>
-        <line x1="20" y1="1.5" x2="248" y2="1.5" stroke="url(#omgTopBevel)" stroke-width="1"/>
-
-        <rect x="18" y="18" width="114" height="21" rx="10.5" fill="${chipBg}"/>
-        <text x="75" y="32" text-anchor="middle" class="mono" font-size="10.2" font-weight="600" fill="${sec.accentText}">CLIENTE HÍBRIDO</text>
-
-        <text x="18" y="64" class="display" font-size="16.5" font-weight="600" letter-spacing="-0.25" fill="${sec.text}">React 19 + Electron 45</text>
-        <text x="18" y="88" class="sans" font-size="12.5" fill="${sec.textSecondary}">Cabina de postura en vivo</text>
-        <text x="18" y="106" class="sans" font-size="12.5" fill="${sec.textSecondary}">y copiloto CTI con citas.</text>
-
-        <rect x="18" y="124" width="232" height="58" rx="10" fill="${innerRowBg}" stroke="${sec.divider}" stroke-width="1"/>
-        <text x="30" y="145" class="sans" font-size="11.8" font-weight="600" fill="${sec.text}">Canal IPC local</text>
-        <text x="30" y="164" class="mono" font-size="10.8" fill="${sec.textMuted}">Windows · ADB · iOS (RAM)</text>
-      </g>
-
-      <!-- Connector 1: Client -> Gateway -->
-      <line x1="300" y1="191" x2="348" y2="191" stroke="${arrowStroke}" stroke-width="1.8" marker-end="url(#secArrow)"/>
-      <text x="324" y="179" text-anchor="middle" class="mono" font-size="10" font-weight="600" fill="${sec.accentText}">JWT</text>
-
-      <!-- Zone 2: Java Zero-Retention Gateway -->
-      <g transform="translate(356, 90)">
-        <rect x="0.5" y="0.5" width="434" height="202" rx="16" fill="${gatewayFill}" stroke="${gatewayStroke}" stroke-width="1.2"/>
-        <rect x="0.5" y="0.5" width="434" height="202" rx="16" fill="url(#omgTileBg)"/>
-        <line x1="22" y1="1.5" x2="412" y2="1.5" stroke="url(#omgTopBevel)" stroke-width="1"/>
-
-        <rect x="18" y="18" width="160" height="21" rx="10.5" fill="${sec.pillAccentFill}" stroke="${sec.pillAccentStroke}" stroke-width="1"/>
-        <text x="98" y="32" text-anchor="middle" class="mono" font-size="10.2" font-weight="600" fill="${sec.accentText}">OMEGA-PUBLIC · :8080</text>
-        <text x="416" y="32" text-anchor="end" class="mono" font-size="10.8" font-weight="600" fill="${sec.textMuted}">Spring Boot 3.3 · Java 21</text>
-
-        <!-- Submodule A -->
-        <rect x="18" y="52" width="398" height="42" rx="10" fill="${innerRowBg}" stroke="${sec.divider}" stroke-width="1"/>
-        <text x="30" y="69" class="sans" font-size="12.2" font-weight="600" fill="${sec.text}">Ingesta Zero-Retention (tmpfs)</text>
-        <text x="30" y="85" class="sans" font-size="11.2" fill="${sec.textMuted}">PDFBox AST, OCR Tess4J y borrado físico en finally</text>
-
-        <!-- Submodule B -->
-        <rect x="18" y="100" width="398" height="42" rx="10" fill="${innerRowBg}" stroke="${sec.divider}" stroke-width="1"/>
-        <text x="30" y="117" class="sans" font-size="12.2" font-weight="600" fill="${sec.text}">Motor RAG Híbrido + STIX 2.1</text>
-        <text x="30" y="133" class="sans" font-size="11.2" fill="${sec.textMuted}">RRF (pgvector + tsvector) con citas por tenant y página</text>
-
-        <!-- Submodule C -->
-        <rect x="18" y="148" width="398" height="42" rx="10" fill="${innerRowBg}" stroke="${sec.divider}" stroke-width="1"/>
-        <text x="30" y="165" class="sans" font-size="12.2" font-weight="600" fill="${sec.text}">Guardrails &amp; Auditoría SHA-256</text>
-        <text x="30" y="181" class="sans" font-size="11.2" fill="${sec.textMuted}">RBAC, anti-IDOR, anti-Zip-Slip y cadena probatoria</text>
-      </g>
-
-      <!-- Dual Connectors: Gateway -> Private Network -->
-      <path d="M 792 145 L 842 145" stroke="${arrowStroke}" stroke-width="1.8" marker-end="url(#secArrow)"/>
-      <text x="817" y="133" text-anchor="middle" class="mono" font-size="9.5" font-weight="600" fill="${sec.accentText}">Token</text>
-
-      <path d="M 792 239 L 842 239" stroke="${arrowStroke}" stroke-width="1.8" marker-end="url(#secArrow)"/>
-      <text x="817" y="227" text-anchor="middle" class="mono" font-size="9.5" font-weight="600" fill="${sec.accentText}">HNSW</text>
-
-      <!-- Zone 3: Isolated Private Network (Forensic Worker + Postgres) -->
-      <g transform="translate(850, 90)">
-        <!-- Worker -->
-        <rect x="0.5" y="0.5" width="322" height="94" rx="15" fill="${nodeFill}" stroke="${nodeStroke}" stroke-width="1"/>
-        <rect x="0.5" y="0.5" width="322" height="94" rx="15" fill="url(#omgTileBg)"/>
-        <text x="16" y="24" class="mono" font-size="10" font-weight="600" fill="${sec.accentText}">OMEGA-PRIVATE · SIN PUERTOS</text>
-        <text x="16" y="46" class="display" font-size="14.8" font-weight="600" fill="${sec.text}">Worker Forense FastAPI</text>
-        <text x="16" y="65" class="sans" font-size="11.8" fill="${sec.textSecondary}">MVT, YARA e iOS (:memory:) 100% en RAM</text>
-        <text x="16" y="82" class="mono" font-size="10.5" fill="${sec.textMuted}">Fail-closed 401/503 · 0B retenidos</text>
-
-        <!-- Postgres -->
-        <rect x="0.5" y="108.5" width="322" height="94" rx="15" fill="${nodeFill}" stroke="${nodeStroke}" stroke-width="1"/>
-        <rect x="0.5" y="108.5" width="322" height="94" rx="15" fill="url(#omgTileBg)"/>
-        <text x="16" y="132" class="mono" font-size="10" font-weight="600" fill="${sec.accentText}">PERSISTENCIA AISLADA · FLYWAY V1–V3</text>
-        <text x="16" y="154" class="display" font-size="14.8" font-weight="600" fill="${sec.text}">PostgreSQL 16 + pgvector</text>
-        <text x="16" y="173" class="sans" font-size="11.8" fill="${sec.textSecondary}">Índices HNSW + GIN y catálogo STIX 2.1</text>
-        <text x="16" y="190" class="mono" font-size="10.5" fill="${sec.textMuted}">audit_logs inmutable (trigger anti-UPDATE)</text>
-      </g>
-
-      <!-- Bottom Verified Benchmarks Strip -->
-      <g transform="translate(28, 310)">
-        <rect x="0.5" y="0.5" width="1144" height="72" rx="15" fill="${kpiBg}" stroke="${nodeStroke}" stroke-width="1"/>
-
-        <text x="24" y="24" class="sans" font-size="11.2" font-weight="500" fill="${sec.textMuted}">Recuperación RAG (Hit@5)</text>
-        <text x="24" y="48" class="display" font-size="21" font-weight="600" letter-spacing="-0.4" fill="${sec.accentText}">85.7% <tspan font-size="12" font-weight="500" fill="${sec.textMuted}">(vs. 28.6% base)</tspan></text>
-
-        <line x1="286" y1="14" x2="286" y2="58" stroke="${sec.divider}" stroke-width="1"/>
-
-        <text x="310" y="24" class="sans" font-size="11.2" font-weight="500" fill="${sec.textMuted}">Control Anti-Alucinación</text>
-        <text x="310" y="48" class="display" font-size="21" font-weight="600" letter-spacing="-0.4" fill="${sec.text}">100% <tspan font-size="12" font-weight="500" fill="${sec.textMuted}">abstención RNF1</tspan></text>
-
-        <line x1="572" y1="14" x2="572" y2="58" stroke="${sec.divider}" stroke-width="1"/>
-
-        <text x="596" y="24" class="sans" font-size="11.2" font-weight="500" fill="${sec.textMuted}">Inteligencia STIX 2.1</text>
-        <text x="596" y="48" class="display" font-size="21" font-weight="600" letter-spacing="-0.4" fill="${sec.text}">6,404 IOCs <tspan font-size="12" font-weight="500" fill="${sec.textMuted}">en 6 campañas</tspan></text>
-
-        <line x1="858" y1="14" x2="858" y2="58" stroke="${sec.divider}" stroke-width="1"/>
-
-        <text x="882" y="24" class="sans" font-size="11.2" font-weight="500" fill="${sec.textMuted}">Latencia Media &amp; Disco</text>
-        <text x="882" y="48" class="display" font-size="21" font-weight="600" letter-spacing="-0.4" fill="${sec.accentText}">1.22s <tspan font-size="12" font-weight="500" fill="${sec.textMuted}">· 0B retenidos</tspan></text>
-      </g>
-    `,
-  })}
-</svg>`;
-}
-
 const SECONDARY_PROJECTS = [
   {
     slug: 'guardian',
     icon: 'eye',
+    security: true,
     title: 'GUARDIAN',
     subtitle: 'Seguridad Vial Multi-Agente',
     line1: 'Predice riesgos en transporte terrestre',
@@ -294,28 +143,34 @@ const SECONDARY_PROJECTS = [
     meta: 'Python · FiftyOne · Gemini AI',
   },
   {
-    slug: 'toolrent',
-    icon: 'layers',
-    title: 'ToolRent',
-    subtitle: 'SaaS Industrial (DDD)',
-    line1: 'Renta de maquinaria organizada en 8',
-    line2: 'módulos Maven, esquema PostgreSQL 4FN',
-    line3: 'con Flyway, JWT RBAC y SPA.',
-    meta: 'Java 17 · Spring Boot 3 · PostgreSQL',
-  },
-  {
     slug: 'cv',
     icon: 'doc',
+    security: false,
     title: 'CV Intelligence',
     subtitle: 'Evaluador de Hojas de Vida',
     line1: 'Contrasta currículums PDF frente a',
     line2: 'vacantes con extracción estructurada',
-    line3: 'y scoring reproducible tipado.',
+    line3: 'y scoring reproducible en Pydantic.',
     meta: 'Python 3.12 · LangChain · Pydantic',
+  },
+  {
+    slug: 'toolrent',
+    icon: 'layers',
+    security: false,
+    title: 'ToolRent',
+    subtitle: 'SaaS Industrial (DDD)',
+    line1: 'Renta de maquinaria organizada en 8',
+    line2: 'módulos Maven, esquema PostgreSQL 4FN',
+    line3: 'con Flyway, JWT RBAC y SPA en Vite.',
+    meta: 'Java 17 · Spring Boot 3 · PostgreSQL',
   },
 ];
 
-function renderSecondaryCard(proj, t) {
+function renderSecondaryCard(proj, t, sec) {
+  const accentColor = proj.security ? sec.accentText : t.accentText;
+  const wellFill = proj.security ? sec.iconWellFill : t.iconWellFill;
+  const wellStroke = proj.security ? sec.iconWellStroke : t.iconWellStroke;
+
   return `<svg xmlns="http://www.w3.org/2000/svg" width="386" height="190" viewBox="0 0 386 190" fill="none" role="img" aria-label="${esc(proj.title)} — ${esc(proj.subtitle)}">
   <defs>
     ${glassDefs(t, 'sec')}
@@ -330,9 +185,9 @@ function renderSecondaryCard(proj, t) {
     t,
     filterShadow: t.mode === 'light',
     inner: `
-      ${renderIconBadge(20, 18, proj.icon, t, { size: 34, accent: true })}
+      ${renderIconBadge(20, 18, proj.icon, t, { size: 34, accentStroke: accentColor, wellFill, wellStroke })}
       <text x="64" y="34" class="display" font-size="18" font-weight="600" letter-spacing="-0.3" fill="${t.text}">${esc(proj.title)}</text>
-      <text x="64" y="51" class="sans" font-size="12.5" font-weight="500" fill="${t.textMuted}">${esc(proj.subtitle)}</text>
+      <text x="64" y="51" class="sans" font-size="12.5" font-weight="500" fill="${proj.security ? accentColor : t.textMuted}">${esc(proj.subtitle)}</text>
 
       <line x1="20" y1="68" x2="366" y2="68" stroke="${t.divider}" stroke-width="1"/>
 
@@ -340,38 +195,139 @@ function renderSecondaryCard(proj, t) {
       <text x="20" y="112" class="sans" font-size="14" font-weight="400" fill="${t.textSecondary}">${esc(proj.line2)}</text>
       <text x="20" y="132" class="sans" font-size="14" font-weight="400" fill="${t.textSecondary}">${esc(proj.line3)}</text>
 
-      <text x="20" y="164" class="mono" font-size="11.8" font-weight="500" fill="${t.accentText}">${esc(proj.meta)}</text>
-      <text x="366" y="164" text-anchor="end" class="sans" font-size="13.5" font-weight="600" fill="${t.accentText}">&#8599;</text>
+      <text x="20" y="164" class="mono" font-size="11.8" font-weight="500" fill="${accentColor}">${esc(proj.meta)}</text>
+      <text x="366" y="164" text-anchor="end" class="sans" font-size="13.5" font-weight="600" fill="${accentColor}">&#8599;</text>
     `,
   })}
 </svg>`;
 }
 
-function renderFooter(t) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="64" viewBox="0 0 1200 64" fill="none" role="img" aria-label="Andrés Felipe Guerra · AG Engineering">
+/**
+ * Generates an honest, metric-free dark-mode architecture diagram SVG to be rasterized
+ * as ./assets/omega-screenshot.png (without any invented numbers or fake UI metrics).
+ */
+export function renderOmegaDiagramSource() {
+  const sec = SECURITY_THEMES.dark;
+  const nodeFill = '#0A233A';
+  const nodeStroke = 'rgba(110, 231, 183, 0.24)';
+  const gatewayFill = '#0D2C47';
+  const gatewayStroke = 'rgba(52, 211, 153, 0.44)';
+  const chipBg = 'rgba(16, 185, 129, 0.14)';
+  const arrowStroke = '#34D399';
+  const innerRowBg = 'rgba(4, 18, 33, 0.50)';
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="328" viewBox="0 0 1200 328" fill="none" role="img" aria-label="Diagrama de arquitectura Zero-Retention de OMEGA">
   <defs>
-    ${glassDefs(t, 'ftr')}
+    ${glassDefs(sec, 'omg')}
+    <clipPath id="omgClip">
+      <rect x="0.5" y="2.5" width="1199" height="323" rx="22"/>
+    </clipPath>
+    <marker id="secArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 1 1 L 9 5 L 1 9 z" fill="${arrowStroke}"/>
+    </marker>
   </defs>
+
   ${renderGlassSurface({
     x: 0,
-    y: 4,
+    y: 2,
     w: 1200,
-    h: 54,
-    rx: 16,
-    prefix: 'ftr',
-    t,
-    filterShadow: t.mode === 'light',
+    h: 324,
+    rx: 22,
+    prefix: 'omg',
+    t: sec,
+    filterShadow: false,
     inner: `
-      <text x="24" y="31" class="sans" font-size="13" font-weight="600" letter-spacing="-0.1" fill="${t.text}">Andrés Felipe Guerra  <tspan font-weight="400" fill="${t.textMuted}">·  AG Engineering  ·  Bucaramanga, Colombia</tspan></text>
-      <text x="1176" y="31" text-anchor="end" class="sans" font-size="12.5" font-weight="600" fill="${t.accentText}">portfolio.agengineering.workers.dev  &#8599;</text>
+      <g clip-path="url(#omgClip)">
+        <g filter="url(#omgSoftBlur)" opacity="0.22">
+          <circle cx="210" cy="70" r="140" fill="${sec.ambientPrimary}"/>
+          <circle cx="960" cy="250" r="150" fill="${sec.ambientSecondary}"/>
+        </g>
+      </g>
+
+      <circle cx="34" cy="34" r="5" fill="${sec.accent}"/>
+      <circle cx="34" cy="34" r="9" fill="${sec.accent}" fill-opacity="0.18"/>
+      <text x="54" y="39" class="display" font-size="16" font-weight="600" letter-spacing="-0.25" fill="${sec.text}">Arquitectura Zero-Retention · Segregación de Redes Docker</text>
+      <text x="54" y="57" class="sans" font-size="12.2" fill="${sec.textMuted}">Flujo entre cliente híbrido, gateway Spring Boot y worker forense sin exposición pública</text>
+
+      <rect x="1032" y="24" width="140" height="26" rx="13" fill="${sec.pillAccentFill}" stroke="${sec.pillAccentStroke}" stroke-width="1"/>
+      <text x="1102" y="40.5" text-anchor="middle" class="mono" font-size="11" font-weight="600" fill="${sec.accentText}">v1.3.1 · Security</text>
+
+      <line x1="28" y1="74" x2="1172" y2="74" stroke="${sec.divider}" stroke-width="1"/>
+
+      <!-- Zone 1: Client Web / Desktop -->
+      <g transform="translate(28, 92)">
+        <rect x="0.5" y="0.5" width="268" height="206" rx="16" fill="${nodeFill}" stroke="${nodeStroke}" stroke-width="1"/>
+        <rect x="0.5" y="0.5" width="268" height="206" rx="16" fill="url(#omgTileBg)"/>
+        <line x1="20" y1="1.5" x2="248" y2="1.5" stroke="url(#omgTopBevel)" stroke-width="1"/>
+
+        <rect x="18" y="18" width="114" height="21" rx="10.5" fill="${chipBg}"/>
+        <text x="75" y="32" text-anchor="middle" class="mono" font-size="10.2" font-weight="600" fill="${sec.accentText}">CLIENTE HÍBRIDO</text>
+
+        <text x="18" y="66" class="display" font-size="16.5" font-weight="600" letter-spacing="-0.25" fill="${sec.text}">React 19 + Electron</text>
+        <text x="18" y="90" class="sans" font-size="12.5" fill="${sec.textSecondary}">Cabina de postura y consultas</text>
+        <text x="18" y="108" class="sans" font-size="12.5" fill="${sec.textSecondary}">CTI con trazabilidad documental.</text>
+
+        <rect x="18" y="128" width="232" height="58" rx="10" fill="${innerRowBg}" stroke="${sec.divider}" stroke-width="1"/>
+        <text x="30" y="149" class="sans" font-size="11.8" font-weight="600" fill="${sec.text}">Canal IPC local</text>
+        <text x="30" y="168" class="mono" font-size="10.8" fill="${sec.textMuted}">Windows · ADB · iOS (RAM)</text>
+      </g>
+
+      <line x1="300" y1="195" x2="348" y2="195" stroke="${arrowStroke}" stroke-width="1.8" marker-end="url(#secArrow)"/>
+      <text x="324" y="183" text-anchor="middle" class="mono" font-size="10" font-weight="600" fill="${sec.accentText}">JWT</text>
+
+      <!-- Zone 2: Java Zero-Retention Gateway -->
+      <g transform="translate(356, 92)">
+        <rect x="0.5" y="0.5" width="434" height="206" rx="16" fill="${gatewayFill}" stroke="${gatewayStroke}" stroke-width="1.2"/>
+        <rect x="0.5" y="0.5" width="434" height="206" rx="16" fill="url(#omgTileBg)"/>
+        <line x1="22" y1="1.5" x2="412" y2="1.5" stroke="url(#omgTopBevel)" stroke-width="1"/>
+
+        <rect x="18" y="18" width="160" height="21" rx="10.5" fill="${sec.pillAccentFill}" stroke="${sec.pillAccentStroke}" stroke-width="1"/>
+        <text x="98" y="32" text-anchor="middle" class="mono" font-size="10.2" font-weight="600" fill="${sec.accentText}">OMEGA-PUBLIC · :8080</text>
+        <text x="416" y="32" text-anchor="end" class="mono" font-size="10.8" font-weight="600" fill="${sec.textMuted}">Spring Boot 3 · Java 21</text>
+
+        <rect x="18" y="54" width="398" height="42" rx="10" fill="${innerRowBg}" stroke="${sec.divider}" stroke-width="1"/>
+        <text x="30" y="71" class="sans" font-size="12.2" font-weight="600" fill="${sec.text}">Ingesta Zero-Retention (tmpfs)</text>
+        <text x="30" y="87" class="sans" font-size="11.2" fill="${sec.textMuted}">PDFBox AST, OCR y limpieza física en finally</text>
+
+        <rect x="18" y="102" width="398" height="42" rx="10" fill="${innerRowBg}" stroke="${sec.divider}" stroke-width="1"/>
+        <text x="30" y="119" class="sans" font-size="12.2" font-weight="600" fill="${sec.text}">Motor RAG Híbrido + STIX 2.1</text>
+        <text x="30" y="135" class="sans" font-size="11.2" fill="${sec.textMuted}">Búsqueda RRF (pgvector + tsvector) por tenant</text>
+
+        <rect x="18" y="150" width="398" height="42" rx="10" fill="${innerRowBg}" stroke="${sec.divider}" stroke-width="1"/>
+        <text x="30" y="167" class="sans" font-size="12.2" font-weight="600" fill="${sec.text}">Guardrails &amp; Auditoría SHA-256</text>
+        <text x="30" y="183" class="sans" font-size="11.2" fill="${sec.textMuted}">RBAC, anti-IDOR, anti-Zip-Slip y audit_logs</text>
+      </g>
+
+      <path d="M 792 147 L 842 147" stroke="${arrowStroke}" stroke-width="1.8" marker-end="url(#secArrow)"/>
+      <text x="817" y="135" text-anchor="middle" class="mono" font-size="9.5" font-weight="600" fill="${sec.accentText}">Token</text>
+
+      <path d="M 792 243 L 842 243" stroke="${arrowStroke}" stroke-width="1.8" marker-end="url(#secArrow)"/>
+      <text x="817" y="231" text-anchor="middle" class="mono" font-size="9.5" font-weight="600" fill="${sec.accentText}">HNSW</text>
+
+      <!-- Zone 3: Isolated Private Network -->
+      <g transform="translate(850, 92)">
+        <rect x="0.5" y="0.5" width="322" height="96" rx="15" fill="${nodeFill}" stroke="${nodeStroke}" stroke-width="1"/>
+        <rect x="0.5" y="0.5" width="322" height="96" rx="15" fill="url(#omgTileBg)"/>
+        <text x="16" y="24" class="mono" font-size="10" font-weight="600" fill="${sec.accentText}">OMEGA-PRIVATE · SIN PUERTOS</text>
+        <text x="16" y="46" class="display" font-size="14.8" font-weight="600" fill="${sec.text}">Worker Forense FastAPI</text>
+        <text x="16" y="65" class="sans" font-size="11.8" fill="${sec.textSecondary}">Triaje MVT, YARA, iOS/ADB y OSINT en RAM</text>
+        <text x="16" y="83" class="mono" font-size="10.5" fill="${sec.textMuted}">Middleware X-Internal-Service-Token</text>
+
+        <rect x="0.5" y="110.5" width="322" height="96" rx="15" fill="${nodeFill}" stroke="${nodeStroke}" stroke-width="1"/>
+        <rect x="0.5" y="110.5" width="322" height="96" rx="15" fill="url(#omgTileBg)"/>
+        <text x="16" y="134" class="mono" font-size="10" font-weight="600" fill="${sec.accentText}">PERSISTENCIA AISLADA</text>
+        <text x="16" y="156" class="display" font-size="14.8" font-weight="600" fill="${sec.text}">PostgreSQL 16 + pgvector</text>
+        <text x="16" y="175" class="sans" font-size="11.8" fill="${sec.textSecondary}">Índices HNSW + GIN y catálogo STIX 2.1</text>
+        <text x="16" y="193" class="mono" font-size="10.5" fill="${sec.textMuted}">Aislamiento por tenant_id (Flyway)</text>
+      </g>
     `,
   })}
 </svg>`;
 }
 
 for (const [mode, t] of Object.entries(GLASS_THEMES)) {
+  const sec = SECURITY_THEMES[mode];
   fs.writeFileSync(path.join(OUT_DIR, `hero-${mode}.svg`), renderHero(t), 'utf8');
-  fs.writeFileSync(path.join(OUT_DIR, `footer-${mode}.svg`), renderFooter(t), 'utf8');
 
   const buttons = renderActionButtons(t);
   for (const [slug, svg] of Object.entries(buttons)) {
@@ -379,12 +335,8 @@ for (const [mode, t] of Object.entries(GLASS_THEMES)) {
   }
 
   for (const proj of SECONDARY_PROJECTS) {
-    fs.writeFileSync(path.join(OUT_DIR, `sec-${proj.slug}-${mode}.svg`), renderSecondaryCard(proj, t), 'utf8');
+    fs.writeFileSync(path.join(OUT_DIR, `sec-${proj.slug}-${mode}.svg`), renderSecondaryCard(proj, t, sec), 'utf8');
   }
 }
 
-for (const [mode, sec] of Object.entries(SECURITY_THEMES)) {
-  fs.writeFileSync(path.join(OUT_DIR, `omega-arch-${mode}.svg`), renderOmegaArchitecture(sec), 'utf8');
-}
-
-console.log('Generated v6 hierarchical Apple + Kowalski SVGs in ./assets/v6/');
+console.log('Generated v7 SVGs (hero, buttons, secondary cards) in ./assets/v7/');
