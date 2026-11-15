@@ -8,7 +8,7 @@ import {
   renderGlassSurface,
 } from './glass-tokens.mjs';
 
-const OUT_DIR = path.resolve('assets/v7');
+const OUT_DIR = path.resolve('assets/v8');
 fs.mkdirSync(OUT_DIR, { recursive: true });
 
 const ICONS = {
@@ -24,6 +24,10 @@ const ICONS = {
     `<path d="M9 2.6C5.3 2.6 2.5 5.1 2.5 8.2C2.5 9.6 3.1 10.9 4.1 11.9L3.3 14.8L6.4 13.7C7.2 14 8.1 14.2 9 14.2C12.7 14.2 15.5 11.5 15.5 8.2C15.5 5.1 12.7 2.6 9 2.6Z" stroke="${c}" stroke-width="1.5" stroke-linejoin="round"/>`,
   layers: (c) =>
     `<path d="M9 2.8L15.4 6.1L9 9.4L2.6 6.1L9 2.8Z" stroke="${c}" stroke-width="1.5" stroke-linejoin="round"/><path d="M2.6 9.3L9 12.6L15.4 9.3M2.6 12.4L9 15.7L15.4 12.4" stroke="${c}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`,
+  neural: (c) =>
+    `<circle cx="9" cy="4.2" r="1.7" stroke="${c}" stroke-width="1.4"/><circle cx="4.3" cy="12.5" r="1.7" stroke="${c}" stroke-width="1.4"/><circle cx="13.7" cy="12.5" r="1.7" stroke="${c}" stroke-width="1.4"/><path d="M8.1 5.7L5.2 11M9.9 5.7L12.8 11M6 12.5H12" stroke="${c}" stroke-width="1.4" stroke-linecap="round"/>`,
+  shield: (c) =>
+    `<path d="M9 2.5L14.5 4.8V8.8C14.5 12.1 12.1 14.6 9 15.6C5.9 14.6 3.5 12.1 3.5 8.8V4.8L9 2.5Z" stroke="${c}" stroke-width="1.5" stroke-linejoin="round"/><path d="M6.7 9.1L8.3 10.7L11.6 7.4" stroke="${c}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`,
   doc: (c) =>
     `<path d="M5 2.6H10.5L13.8 5.9V14.4C13.8 15 13.3 15.4 12.7 15.4H5C4.4 15.4 4 15 4 14.4V3.6C4 3 4.4 2.6 5 2.6Z" stroke="${c}" stroke-width="1.5" stroke-linejoin="round"/><path d="M10.2 2.8V6H13.5M6.3 9.4H11.5M6.3 12H9.8" stroke="${c}" stroke-width="1.4" stroke-linecap="round"/>`,
   eye: (c) =>
@@ -130,6 +134,180 @@ function renderActionButtons(t) {
   return out;
 }
 
+function renderCapabilities(t, sec) {
+  const columns = [
+    {
+      icon: 'layers',
+      security: false,
+      title: 'Backend & Arquitectura',
+      subtitle: 'Servicios modulares y persistencia auditada',
+      bullets: [
+        'APIs stateless en Java 21, Spring Boot 3 y FastAPI',
+        'Modelado PostgreSQL 16 (4FN) con Flyway y HNSW',
+        'Aislamiento multi-tenant, JWT HS256 y RBAC',
+      ],
+      footer: 'Hexagonal · DDD · OpenAPI',
+    },
+    {
+      icon: 'neural',
+      security: false,
+      title: 'Sistemas de IA & RAG',
+      subtitle: 'Recuperación híbrida y salida estructurada',
+      bullets: [
+        'Búsqueda RRF (pgvector + tsvector) con citas exactas',
+        'Pipelines tipados en Pydantic y LangChain LCEL',
+        'Reglas anti-alucinación y control de deriva',
+      ],
+      footer: 'pgvector · RAGAS · LLMs',
+    },
+    {
+      icon: 'shield',
+      security: true,
+      title: 'AppSec & Zero-Retention',
+      subtitle: 'Contención, validación y evidencia volátil',
+      bullets: [
+        'Ingesta en tmpfs y análisis RAM (:memory:)',
+        'Redes aisladas sin puertos públicos y anti-IDOR',
+        'Sanitización PDF AST, anti-Zip-Slip y hash SHA-256',
+      ],
+      footer: 'Zero-Retention · Fail-Closed · MVT',
+    },
+  ];
+
+  const panels = columns
+    .map((col, idx) => {
+      const theme = col.security ? sec : t;
+      const prefix = col.security ? 'capSec' : 'cap';
+      const x = idx * 407;
+      return renderGlassSurface({
+        x,
+        y: 2,
+        w: 386,
+        h: 208,
+        rx: 20,
+        prefix,
+        t: theme,
+        filterShadow: theme.mode === 'light',
+        inner: `
+          ${renderIconBadge(22, 20, col.icon, theme, {
+            size: 36,
+            accentStroke: theme.accentText,
+            wellFill: theme.iconWellFill,
+            wellStroke: theme.iconWellStroke,
+          })}
+          <text x="68" y="36" class="display" font-size="16.5" font-weight="600" letter-spacing="-0.25" fill="${theme.text}">${esc(col.title)}</text>
+          <text x="68" y="53" class="sans" font-size="12" font-weight="500" fill="${col.security ? theme.accentText : theme.textMuted}">${esc(col.subtitle)}</text>
+
+          <line x1="22" y1="70" x2="364" y2="70" stroke="${theme.divider}" stroke-width="1"/>
+
+          <circle cx="26" cy="92" r="2.2" fill="${theme.accentText}"/>
+          <text x="36" y="96" class="sans" font-size="12.6" fill="${theme.textSecondary}">${esc(col.bullets[0])}</text>
+
+          <circle cx="26" cy="118" r="2.2" fill="${theme.accentText}"/>
+          <text x="36" y="122" class="sans" font-size="12.6" fill="${theme.textSecondary}">${esc(col.bullets[1])}</text>
+
+          <circle cx="26" cy="144" r="2.2" fill="${theme.accentText}"/>
+          <text x="36" y="148" class="sans" font-size="12.6" fill="${theme.textSecondary}">${esc(col.bullets[2])}</text>
+
+          <line x1="22" y1="166" x2="364" y2="166" stroke="${theme.divider}" stroke-width="1"/>
+          <text x="22" y="189" class="mono" font-size="11.2" font-weight="500" fill="${theme.accentText}">${esc(col.footer)}</text>
+        `,
+      });
+    })
+    .join('\n');
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="216" viewBox="0 0 1200 216" fill="none" role="img" aria-label="Capacidades Técnicas — Backend, IA y AppSec">
+  <defs>
+    ${glassDefs(t, 'cap')}
+    ${glassDefs(sec, 'capSec')}
+  </defs>
+  ${panels}
+</svg>`;
+}
+
+function renderOmegaFeaturedCard(sec) {
+  const isDark = sec.mode === 'dark';
+  const nodeFill = isDark ? '#0A233A' : '#FFFFFF';
+  const nodeStroke = isDark ? 'rgba(110, 231, 183, 0.24)' : 'rgba(5, 150, 105, 0.22)';
+  const gatewayFill = isDark ? '#0D2C47' : '#FFFFFF';
+  const gatewayStroke = isDark ? 'rgba(52, 211, 153, 0.44)' : 'rgba(5, 150, 105, 0.36)';
+  const arrowStroke = isDark ? '#34D399' : '#059669';
+  const orbFill = isDark ? '#091E3A' : '#0F294A';
+  const orbStroke = isDark ? 'rgba(110, 231, 183, 0.48)' : 'rgba(5, 150, 105, 0.45)';
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="252" viewBox="0 0 1200 252" fill="none" role="img" aria-label="OMEGA — Plataforma defensiva de Threat Intelligence y análisis forense">
+  <defs>
+    ${glassDefs(sec, 'omg')}
+    <clipPath id="omgClip">
+      <rect x="0.5" y="2.5" width="1199" height="247" rx="22"/>
+    </clipPath>
+    <marker id="secArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 1 1 L 9 5 L 1 9 z" fill="${arrowStroke}"/>
+    </marker>
+  </defs>
+
+  ${renderGlassSurface({
+    x: 0,
+    y: 2,
+    w: 1200,
+    h: 248,
+    rx: 22,
+    prefix: 'omg',
+    t: sec,
+    filterShadow: !isDark,
+    inner: `
+      <g clip-path="url(#omgClip)">
+        <g filter="url(#omgSoftBlur)" opacity="${isDark ? '0.24' : '0.12'}">
+          <circle cx="140" cy="60" r="140" fill="${sec.ambientPrimary}"/>
+          <circle cx="1020" cy="210" r="150" fill="${sec.ambientSecondary}"/>
+        </g>
+      </g>
+
+      <!-- Emblem + Title + Security Badge -->
+      <circle cx="48" cy="46" r="22" fill="${orbFill}" stroke="${orbStroke}" stroke-width="1.2"/>
+      <text x="48" y="54" text-anchor="middle" class="display" font-size="24" font-weight="600" fill="#FFFFFF">&#937;</text>
+
+      <text x="84" y="42" class="display" font-size="21" font-weight="600" letter-spacing="-0.4" fill="${sec.text}">OMEGA</text>
+      <text x="84" y="61" class="sans" font-size="13" font-weight="500" fill="${sec.accentText}">Threat Intelligence · Forense Móvil/Host · Modo Zero-Retention</text>
+
+      <rect x="974" y="29" width="200" height="26" rx="13" fill="${sec.pillAccentFill}" stroke="${sec.pillAccentStroke}" stroke-width="1"/>
+      <text x="1074" y="46" text-anchor="middle" class="mono" font-size="11" font-weight="600" fill="${sec.accentText}">PROYECTO PRINCIPAL · v1.3.1</text>
+
+      <!-- Value summary -->
+      <text x="26" y="102" class="sans" font-size="14" fill="${sec.textSecondary}">Plataforma defensiva para detectar e investigar spyware comercial (Pegasus / Predator), correlacionando</text>
+      <text x="26" y="123" class="sans" font-size="14" fill="${sec.textSecondary}">reportes CTI mediante RAG híbrido (pgvector + RRF), triaje MVT/iOS/ADB en RAM y auditoría OSINT pasiva.</text>
+
+      <!-- Compact 3-zone Zero-Retention flow -->
+      <g transform="translate(26, 146)">
+        <!-- Zone 1 -->
+        <rect x="0.5" y="0.5" width="286" height="78" rx="14" fill="${nodeFill}" stroke="${nodeStroke}" stroke-width="1"/>
+        <text x="18" y="24" class="mono" font-size="10.2" font-weight="600" fill="${sec.accentText}">CLIENTE HÍBRIDO</text>
+        <text x="18" y="45" class="display" font-size="15" font-weight="600" fill="${sec.text}">React 19 + Electron 45</text>
+        <text x="18" y="64" class="sans" font-size="11.8" fill="${sec.textMuted}">Copiloto CTI · IPC local Windows / ADB / iOS</text>
+
+        <line x1="292" y1="39.5" x2="340" y2="39.5" stroke="${arrowStroke}" stroke-width="1.8" marker-end="url(#secArrow)"/>
+        <text x="316" y="29" text-anchor="middle" class="mono" font-size="9.8" font-weight="600" fill="${sec.accentText}">JWT</text>
+
+        <!-- Zone 2 -->
+        <rect x="348.5" y="0.5" width="400" height="78" rx="14" fill="${gatewayFill}" stroke="${gatewayStroke}" stroke-width="1.2"/>
+        <text x="366" y="24" class="mono" font-size="10.2" font-weight="600" fill="${sec.accentText}">GATEWAY · OMEGA-PUBLIC (:8080)</text>
+        <text x="366" y="45" class="display" font-size="15" font-weight="600" fill="${sec.text}">Java 21 · Spring Boot 3.3</text>
+        <text x="366" y="64" class="sans" font-size="11.8" fill="${sec.textMuted}">Ingesta tmpfs · RRF híbrido · RBAC · Auditoría SHA-256</text>
+
+        <line x1="754" y1="39.5" x2="804" y2="39.5" stroke="${arrowStroke}" stroke-width="1.8" marker-end="url(#secArrow)"/>
+        <text x="779" y="29" text-anchor="middle" class="mono" font-size="9.5" font-weight="600" fill="${sec.accentText}">Token</text>
+
+        <!-- Zone 3 -->
+        <rect x="812.5" y="0.5" width="335" height="78" rx="14" fill="${nodeFill}" stroke="${nodeStroke}" stroke-width="1"/>
+        <text x="830" y="24" class="mono" font-size="10.2" font-weight="600" fill="${sec.accentText}">OMEGA-PRIVATE · SIN PUERTOS</text>
+        <text x="830" y="45" class="display" font-size="15" font-weight="600" fill="${sec.text}">FastAPI (:memory:) + pgvector</text>
+        <text x="830" y="64" class="sans" font-size="11.8" fill="${sec.textMuted}">MVT · YARA · STIX 2.1 · Aislamiento tenant_id</text>
+      </g>
+    `,
+  })}
+</svg>`;
+}
+
 const SECONDARY_PROJECTS = [
   {
     slug: 'guardian',
@@ -202,132 +380,11 @@ function renderSecondaryCard(proj, t, sec) {
 </svg>`;
 }
 
-/**
- * Generates an honest, metric-free dark-mode architecture diagram SVG to be rasterized
- * as ./assets/omega-screenshot.png (without any invented numbers or fake UI metrics).
- */
-export function renderOmegaDiagramSource() {
-  const sec = SECURITY_THEMES.dark;
-  const nodeFill = '#0A233A';
-  const nodeStroke = 'rgba(110, 231, 183, 0.24)';
-  const gatewayFill = '#0D2C47';
-  const gatewayStroke = 'rgba(52, 211, 153, 0.44)';
-  const chipBg = 'rgba(16, 185, 129, 0.14)';
-  const arrowStroke = '#34D399';
-  const innerRowBg = 'rgba(4, 18, 33, 0.50)';
-
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="328" viewBox="0 0 1200 328" fill="none" role="img" aria-label="Diagrama de arquitectura Zero-Retention de OMEGA">
-  <defs>
-    ${glassDefs(sec, 'omg')}
-    <clipPath id="omgClip">
-      <rect x="0.5" y="2.5" width="1199" height="323" rx="22"/>
-    </clipPath>
-    <marker id="secArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-      <path d="M 1 1 L 9 5 L 1 9 z" fill="${arrowStroke}"/>
-    </marker>
-  </defs>
-
-  ${renderGlassSurface({
-    x: 0,
-    y: 2,
-    w: 1200,
-    h: 324,
-    rx: 22,
-    prefix: 'omg',
-    t: sec,
-    filterShadow: false,
-    inner: `
-      <g clip-path="url(#omgClip)">
-        <g filter="url(#omgSoftBlur)" opacity="0.22">
-          <circle cx="210" cy="70" r="140" fill="${sec.ambientPrimary}"/>
-          <circle cx="960" cy="250" r="150" fill="${sec.ambientSecondary}"/>
-        </g>
-      </g>
-
-      <circle cx="34" cy="34" r="5" fill="${sec.accent}"/>
-      <circle cx="34" cy="34" r="9" fill="${sec.accent}" fill-opacity="0.18"/>
-      <text x="54" y="39" class="display" font-size="16" font-weight="600" letter-spacing="-0.25" fill="${sec.text}">Arquitectura Zero-Retention · Segregación de Redes Docker</text>
-      <text x="54" y="57" class="sans" font-size="12.2" fill="${sec.textMuted}">Flujo entre cliente híbrido, gateway Spring Boot y worker forense sin exposición pública</text>
-
-      <rect x="1032" y="24" width="140" height="26" rx="13" fill="${sec.pillAccentFill}" stroke="${sec.pillAccentStroke}" stroke-width="1"/>
-      <text x="1102" y="40.5" text-anchor="middle" class="mono" font-size="11" font-weight="600" fill="${sec.accentText}">v1.3.1 · Security</text>
-
-      <line x1="28" y1="74" x2="1172" y2="74" stroke="${sec.divider}" stroke-width="1"/>
-
-      <!-- Zone 1: Client Web / Desktop -->
-      <g transform="translate(28, 92)">
-        <rect x="0.5" y="0.5" width="268" height="206" rx="16" fill="${nodeFill}" stroke="${nodeStroke}" stroke-width="1"/>
-        <rect x="0.5" y="0.5" width="268" height="206" rx="16" fill="url(#omgTileBg)"/>
-        <line x1="20" y1="1.5" x2="248" y2="1.5" stroke="url(#omgTopBevel)" stroke-width="1"/>
-
-        <rect x="18" y="18" width="114" height="21" rx="10.5" fill="${chipBg}"/>
-        <text x="75" y="32" text-anchor="middle" class="mono" font-size="10.2" font-weight="600" fill="${sec.accentText}">CLIENTE HÍBRIDO</text>
-
-        <text x="18" y="66" class="display" font-size="16.5" font-weight="600" letter-spacing="-0.25" fill="${sec.text}">React 19 + Electron</text>
-        <text x="18" y="90" class="sans" font-size="12.5" fill="${sec.textSecondary}">Cabina de postura y consultas</text>
-        <text x="18" y="108" class="sans" font-size="12.5" fill="${sec.textSecondary}">CTI con trazabilidad documental.</text>
-
-        <rect x="18" y="128" width="232" height="58" rx="10" fill="${innerRowBg}" stroke="${sec.divider}" stroke-width="1"/>
-        <text x="30" y="149" class="sans" font-size="11.8" font-weight="600" fill="${sec.text}">Canal IPC local</text>
-        <text x="30" y="168" class="mono" font-size="10.8" fill="${sec.textMuted}">Windows · ADB · iOS (RAM)</text>
-      </g>
-
-      <line x1="300" y1="195" x2="348" y2="195" stroke="${arrowStroke}" stroke-width="1.8" marker-end="url(#secArrow)"/>
-      <text x="324" y="183" text-anchor="middle" class="mono" font-size="10" font-weight="600" fill="${sec.accentText}">JWT</text>
-
-      <!-- Zone 2: Java Zero-Retention Gateway -->
-      <g transform="translate(356, 92)">
-        <rect x="0.5" y="0.5" width="434" height="206" rx="16" fill="${gatewayFill}" stroke="${gatewayStroke}" stroke-width="1.2"/>
-        <rect x="0.5" y="0.5" width="434" height="206" rx="16" fill="url(#omgTileBg)"/>
-        <line x1="22" y1="1.5" x2="412" y2="1.5" stroke="url(#omgTopBevel)" stroke-width="1"/>
-
-        <rect x="18" y="18" width="160" height="21" rx="10.5" fill="${sec.pillAccentFill}" stroke="${sec.pillAccentStroke}" stroke-width="1"/>
-        <text x="98" y="32" text-anchor="middle" class="mono" font-size="10.2" font-weight="600" fill="${sec.accentText}">OMEGA-PUBLIC · :8080</text>
-        <text x="416" y="32" text-anchor="end" class="mono" font-size="10.8" font-weight="600" fill="${sec.textMuted}">Spring Boot 3 · Java 21</text>
-
-        <rect x="18" y="54" width="398" height="42" rx="10" fill="${innerRowBg}" stroke="${sec.divider}" stroke-width="1"/>
-        <text x="30" y="71" class="sans" font-size="12.2" font-weight="600" fill="${sec.text}">Ingesta Zero-Retention (tmpfs)</text>
-        <text x="30" y="87" class="sans" font-size="11.2" fill="${sec.textMuted}">PDFBox AST, OCR y limpieza física en finally</text>
-
-        <rect x="18" y="102" width="398" height="42" rx="10" fill="${innerRowBg}" stroke="${sec.divider}" stroke-width="1"/>
-        <text x="30" y="119" class="sans" font-size="12.2" font-weight="600" fill="${sec.text}">Motor RAG Híbrido + STIX 2.1</text>
-        <text x="30" y="135" class="sans" font-size="11.2" fill="${sec.textMuted}">Búsqueda RRF (pgvector + tsvector) por tenant</text>
-
-        <rect x="18" y="150" width="398" height="42" rx="10" fill="${innerRowBg}" stroke="${sec.divider}" stroke-width="1"/>
-        <text x="30" y="167" class="sans" font-size="12.2" font-weight="600" fill="${sec.text}">Guardrails &amp; Auditoría SHA-256</text>
-        <text x="30" y="183" class="sans" font-size="11.2" fill="${sec.textMuted}">RBAC, anti-IDOR, anti-Zip-Slip y audit_logs</text>
-      </g>
-
-      <path d="M 792 147 L 842 147" stroke="${arrowStroke}" stroke-width="1.8" marker-end="url(#secArrow)"/>
-      <text x="817" y="135" text-anchor="middle" class="mono" font-size="9.5" font-weight="600" fill="${sec.accentText}">Token</text>
-
-      <path d="M 792 243 L 842 243" stroke="${arrowStroke}" stroke-width="1.8" marker-end="url(#secArrow)"/>
-      <text x="817" y="231" text-anchor="middle" class="mono" font-size="9.5" font-weight="600" fill="${sec.accentText}">HNSW</text>
-
-      <!-- Zone 3: Isolated Private Network -->
-      <g transform="translate(850, 92)">
-        <rect x="0.5" y="0.5" width="322" height="96" rx="15" fill="${nodeFill}" stroke="${nodeStroke}" stroke-width="1"/>
-        <rect x="0.5" y="0.5" width="322" height="96" rx="15" fill="url(#omgTileBg)"/>
-        <text x="16" y="24" class="mono" font-size="10" font-weight="600" fill="${sec.accentText}">OMEGA-PRIVATE · SIN PUERTOS</text>
-        <text x="16" y="46" class="display" font-size="14.8" font-weight="600" fill="${sec.text}">Worker Forense FastAPI</text>
-        <text x="16" y="65" class="sans" font-size="11.8" fill="${sec.textSecondary}">Triaje MVT, YARA, iOS/ADB y OSINT en RAM</text>
-        <text x="16" y="83" class="mono" font-size="10.5" fill="${sec.textMuted}">Middleware X-Internal-Service-Token</text>
-
-        <rect x="0.5" y="110.5" width="322" height="96" rx="15" fill="${nodeFill}" stroke="${nodeStroke}" stroke-width="1"/>
-        <rect x="0.5" y="110.5" width="322" height="96" rx="15" fill="url(#omgTileBg)"/>
-        <text x="16" y="134" class="mono" font-size="10" font-weight="600" fill="${sec.accentText}">PERSISTENCIA AISLADA</text>
-        <text x="16" y="156" class="display" font-size="14.8" font-weight="600" fill="${sec.text}">PostgreSQL 16 + pgvector</text>
-        <text x="16" y="175" class="sans" font-size="11.8" fill="${sec.textSecondary}">Índices HNSW + GIN y catálogo STIX 2.1</text>
-        <text x="16" y="193" class="mono" font-size="10.5" fill="${sec.textMuted}">Aislamiento por tenant_id (Flyway)</text>
-      </g>
-    `,
-  })}
-</svg>`;
-}
-
 for (const [mode, t] of Object.entries(GLASS_THEMES)) {
   const sec = SECURITY_THEMES[mode];
   fs.writeFileSync(path.join(OUT_DIR, `hero-${mode}.svg`), renderHero(t), 'utf8');
+  fs.writeFileSync(path.join(OUT_DIR, `capabilities-${mode}.svg`), renderCapabilities(t, sec), 'utf8');
+  fs.writeFileSync(path.join(OUT_DIR, `omega-featured-${mode}.svg`), renderOmegaFeaturedCard(sec), 'utf8');
 
   const buttons = renderActionButtons(t);
   for (const [slug, svg] of Object.entries(buttons)) {
@@ -339,4 +396,4 @@ for (const [mode, t] of Object.entries(GLASS_THEMES)) {
   }
 }
 
-console.log('Generated v7 SVGs (hero, buttons, secondary cards) in ./assets/v7/');
+console.log('Generated v8 profile-first SVGs in ./assets/v8/');
