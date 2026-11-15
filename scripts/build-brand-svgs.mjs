@@ -1,399 +1,217 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {
-  GLASS_THEMES,
-  SECURITY_THEMES,
-  esc,
-  glassDefs,
-  renderGlassSurface,
-} from './glass-tokens.mjs';
+  GOTHAM_THEMES,
+  FONT_SANS,
+  FONT_MONO,
+  escapeXml,
+  chamferPath,
+} from './gotham-tokens.mjs';
 
-const OUT_DIR = path.resolve('assets/v8');
-fs.mkdirSync(OUT_DIR, { recursive: true });
+const OUT_DIR = path.resolve('assets/v9');
 
-const ICONS = {
-  globe: (c) =>
-    `<circle cx="9" cy="9" r="6.8" stroke="${c}" stroke-width="1.5"/><ellipse cx="9" cy="9" rx="3" ry="6.8" stroke="${c}" stroke-width="1.3"/><line x1="2.4" y1="9" x2="15.6" y2="9" stroke="${c}" stroke-width="1.3"/>`,
-  linkedin: (c) =>
-    `<rect x="2.5" y="2.5" width="13" height="13" rx="3" stroke="${c}" stroke-width="1.5"/><circle cx="6.2" cy="6.2" r="0.9" fill="${c}"/><path d="M6.2 8.4V12.5M9.2 12.5V8.4M9.2 9.8C9.2 8.7 12.2 8.4 12.2 10.2V12.5" stroke="${c}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`,
-  mail: (c) =>
-    `<rect x="2.2" y="3.8" width="13.6" height="10.4" rx="2.2" stroke="${c}" stroke-width="1.5"/><path d="M3 5.2L9 9.6L15 5.2" stroke="${c}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`,
-  briefcase: (c) =>
-    `<rect x="2.4" y="5.4" width="13.2" height="9.4" rx="2.2" stroke="${c}" stroke-width="1.5"/><path d="M6.5 5.4V4C6.5 3.3 7 2.8 7.7 2.8H10.3C11 2.8 11.5 3.3 11.5 4V5.4" stroke="${c}" stroke-width="1.5"/>`,
-  message: (c) =>
-    `<path d="M9 2.6C5.3 2.6 2.5 5.1 2.5 8.2C2.5 9.6 3.1 10.9 4.1 11.9L3.3 14.8L6.4 13.7C7.2 14 8.1 14.2 9 14.2C12.7 14.2 15.5 11.5 15.5 8.2C15.5 5.1 12.7 2.6 9 2.6Z" stroke="${c}" stroke-width="1.5" stroke-linejoin="round"/>`,
-  layers: (c) =>
-    `<path d="M9 2.8L15.4 6.1L9 9.4L2.6 6.1L9 2.8Z" stroke="${c}" stroke-width="1.5" stroke-linejoin="round"/><path d="M2.6 9.3L9 12.6L15.4 9.3M2.6 12.4L9 15.7L15.4 12.4" stroke="${c}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`,
-  neural: (c) =>
-    `<circle cx="9" cy="4.2" r="1.7" stroke="${c}" stroke-width="1.4"/><circle cx="4.3" cy="12.5" r="1.7" stroke="${c}" stroke-width="1.4"/><circle cx="13.7" cy="12.5" r="1.7" stroke="${c}" stroke-width="1.4"/><path d="M8.1 5.7L5.2 11M9.9 5.7L12.8 11M6 12.5H12" stroke="${c}" stroke-width="1.4" stroke-linecap="round"/>`,
-  shield: (c) =>
-    `<path d="M9 2.5L14.5 4.8V8.8C14.5 12.1 12.1 14.6 9 15.6C5.9 14.6 3.5 12.1 3.5 8.8V4.8L9 2.5Z" stroke="${c}" stroke-width="1.5" stroke-linejoin="round"/><path d="M6.7 9.1L8.3 10.7L11.6 7.4" stroke="${c}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`,
-  doc: (c) =>
-    `<path d="M5 2.6H10.5L13.8 5.9V14.4C13.8 15 13.3 15.4 12.7 15.4H5C4.4 15.4 4 15 4 14.4V3.6C4 3 4.4 2.6 5 2.6Z" stroke="${c}" stroke-width="1.5" stroke-linejoin="round"/><path d="M10.2 2.8V6H13.5M6.3 9.4H11.5M6.3 12H9.8" stroke="${c}" stroke-width="1.4" stroke-linecap="round"/>`,
-  eye: (c) =>
-    `<path d="M2.4 9C3.9 5.9 6.3 4.4 9 4.4C11.7 4.4 14.1 5.9 15.6 9C14.1 12.1 11.7 13.6 9 13.6C6.3 13.6 3.9 12.1 2.4 9Z" stroke="${c}" stroke-width="1.5" stroke-linejoin="round"/><circle cx="9" cy="9" r="2.2" stroke="${c}" stroke-width="1.5"/>`,
-};
+function ensureCleanDir(dir) {
+  fs.mkdirSync(dir, { recursive: true });
+}
 
-function renderIconBadge(x, y, iconName, t, { size = 34, accentStroke, wellFill, wellStroke } = {}) {
-  const strokeColor = accentStroke || t.accentText;
-  const fill = wellFill || t.iconWellFill;
-  const stroke = wellStroke || t.iconWellStroke;
-  const offset = (size - 18) / 2;
+function writeSvg(name, content) {
+  fs.writeFileSync(path.join(OUT_DIR, name), `${content.trim()}\n`, 'utf8');
+}
+
+/**
+ * Quiet Art-Deco Gotham monolith flanking silhouettes (strictly architectural, zero icons).
+ */
+function renderGothamSkyline(t) {
   return `
-  <g transform="translate(${x}, ${y})">
-    <rect x="0.5" y="0.5" width="${size - 1}" height="${size - 1}" rx="9" fill="${fill}" stroke="${stroke}" stroke-width="1"/>
-    <g transform="translate(${offset}, ${offset})">
-      ${ICONS[iconName](strokeColor)}
-    </g>
+  <g>
+    <!-- Faint atmospheric diagonal shafts -->
+    <polygon points="110,160 220,0 265,0 165,160" fill="${t.textPrimary}" opacity="0.025" />
+    <polygon points="1035,160 950,0 990,0 1085,160" fill="${t.textPrimary}" opacity="0.022" />
+
+    <!-- Left flank Deco monoliths -->
+    <rect x="18" y="64" width="54" height="96" fill="${t.skyTowerA}" />
+    <rect x="30" y="44" width="30" height="20" fill="${t.skyTowerA}" />
+    <rect x="44" y="26" width="2" height="18" fill="${t.skyRib}" />
+
+    <rect x="80" y="76" width="76" height="84" fill="${t.skyTowerB}" />
+    <rect x="96" y="48" width="44" height="28" fill="${t.skyTowerB}" />
+    <rect x="110" y="34" width="16" height="14" fill="${t.skyTowerC}" />
+    <line x1="104" y1="56" x2="104" y2="160" stroke="${t.skyRib}" stroke-width="1" />
+    <line x1="118" y1="40" x2="118" y2="160" stroke="${t.skyRib}" stroke-width="1" />
+    <line x1="132" y1="56" x2="132" y2="160" stroke="${t.skyRib}" stroke-width="1" />
+
+    <rect x="164" y="96" width="52" height="64" fill="${t.skyTowerC}" />
+    <rect x="176" y="82" width="28" height="14" fill="${t.skyTowerC}" />
+    <line x1="190" y1="88" x2="190" y2="160" stroke="${t.skyRib}" stroke-width="1" />
+
+    <rect x="224" y="118" width="46" height="42" fill="${t.skyTowerA}" />
+    <rect x="278" y="136" width="38" height="24" fill="${t.skyTowerB}" />
+
+    <!-- Right flank Deco monoliths (asymmetric balance) -->
+    <rect x="884" y="136" width="38" height="24" fill="${t.skyTowerB}" />
+    <rect x="930" y="112" width="48" height="48" fill="${t.skyTowerA}" />
+    <rect x="942" y="98" width="24" height="14" fill="${t.skyTowerB}" />
+
+    <rect x="986" y="60" width="78" height="100" fill="${t.skyTowerC}" />
+    <rect x="1000" y="38" width="50" height="22" fill="${t.skyTowerB}" />
+    <rect x="1014" y="22" width="22" height="16" fill="${t.skyTowerC}" />
+    <rect x="1024" y="10" width="2" height="12" fill="${t.skyRib}" />
+    <line x1="1010" y1="48" x2="1010" y2="160" stroke="${t.skyRib}" stroke-width="1" />
+    <line x1="1025" y1="30" x2="1025" y2="160" stroke="${t.skyRib}" stroke-width="1" />
+    <line x1="1040" y1="48" x2="1040" y2="160" stroke="${t.skyRib}" stroke-width="1" />
+
+    <rect x="1072" y="88" width="54" height="72" fill="${t.skyTowerB}" />
+    <rect x="1086" y="74" width="26" height="14" fill="${t.skyTowerC}" />
+
+    <rect x="1134" y="68" width="48" height="92" fill="${t.skyTowerA}" />
+    <rect x="1146" y="50" width="24" height="18" fill="${t.skyTowerB}" />
   </g>`;
 }
 
+/**
+ * Hero Banner (1200x160) — Gotham Noir chamfered slab, zero icons, Name + Position only.
+ */
 function renderHero(t) {
-  const isDark = t.mode === 'dark';
-  const baseStart = isDark ? '#061547' : '#EBF1FD';
-  const baseMid = isDark ? '#0D2C8A' : '#F8FAFF';
-  const baseEnd = isDark ? '#071B5B' : '#E6EEFC';
-  const nameFill = isDark ? '#FFFFFF' : '#0B1F66';
-  const rolePrimaryFill = isDark ? '#E0EBFF' : '#1E293B';
-  const roleSecondaryFill = isDark ? '#6EE7B7' : '#047857';
-  const sheenOpacity = isDark ? '0.07' : '0.45';
-  const frameStroke = isDark ? 'rgba(191, 219, 254, 0.18)' : 'rgba(29, 78, 216, 0.14)';
+  const outer = chamferPath(0.5, 0.5, 1199, 159, 14);
+  const clip = chamferPath(1, 1, 1198, 158, 14);
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="196" viewBox="0 0 1200 196" fill="none" role="img" aria-label="Andrés Felipe Guerra — Fullstack Software Engineer">
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="160" viewBox="0 0 1200 160" role="img" aria-label="Andrés Felipe Guerra — Fullstack Software Engineer · AI Systems &amp; AppSec">
   <defs>
-    ${glassDefs(t, 'hero')}
-    <linearGradient id="heroRoyalStage" x1="0" y1="0" x2="1200" y2="196" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="${baseStart}"/>
-      <stop offset="50%" stop-color="${baseMid}"/>
-      <stop offset="100%" stop-color="${baseEnd}"/>
+    <clipPath id="hero-clip">
+      <path d="${clip}" />
+    </clipPath>
+    <linearGradient id="fog" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="${t.bgBase}" />
+      <stop offset="100%" stop-color="${t.bgSurface}" />
     </linearGradient>
-    <linearGradient id="heroOpticalSheen" x1="160" y1="0" x2="980" y2="196" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0"/>
-      <stop offset="48%" stop-color="#FFFFFF" stop-opacity="${sheenOpacity}"/>
-      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
-    </linearGradient>
-    <clipPath id="heroOuterClip">
-      <rect x="0.5" y="0.5" width="1199" height="195" rx="24"/>
+  </defs>
+
+  <g clip-path="url(#hero-clip)">
+    <rect width="1200" height="160" fill="url(#fog)" />
+    ${renderGothamSkyline(t)}
+    <line x1="0" y1="159" x2="1200" y2="159" stroke="${t.borderHairline}" stroke-width="1" />
+  </g>
+
+  <!-- Outer hairline architectural border -->
+  <path d="${outer}" fill="none" stroke="${t.borderSteel}" stroke-width="1" />
+
+  <!-- Corner tactical bracket ticks -->
+  <path d="M 1184 8 L 1192 8 L 1192 16" fill="none" stroke="${t.accent}" stroke-width="1.5" />
+  <path d="M 8 144 L 8 152 L 16 152" fill="none" stroke="${t.accent}" stroke-width="1.5" />
+
+  <!-- Identity (strictly zero icons) -->
+  <text x="600" y="66" text-anchor="middle" fill="${t.textPrimary}" font-family="${FONT_SANS}" font-size="42" font-weight="700" letter-spacing="-0.9">Andrés Felipe Guerra</text>
+
+  <rect x="572" y="84" width="56" height="2" fill="${t.accent}" />
+
+  <text x="600" y="116" text-anchor="middle" font-family="${FONT_SANS}" font-size="17" font-weight="500" letter-spacing="0.2">
+    <tspan fill="${t.textSecondary}">Fullstack Software Engineer</tspan>
+    <tspan fill="${t.accent}" font-weight="700">  ·  </tspan>
+    <tspan fill="${t.textStrong}" font-weight="600">AI Systems &amp; AppSec</tspan>
+  </text>
+</svg>`;
+}
+
+/**
+ * OMEGA Zero-Retention Topology Schematic (1200x136) — flat matte wireframe, zero prose bloat.
+ */
+function renderOmegaArch(t) {
+  const outer = chamferPath(0.5, 0.5, 1199, 135, 10);
+  const clip = chamferPath(1, 1, 1198, 134, 10);
+  const n1 = chamferPath(24, 42, 326, 74, 7);
+  const n2 = chamferPath(428, 42, 344, 74, 7);
+  const n3 = chamferPath(850, 42, 326, 74, 7);
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="136" viewBox="0 0 1200 136" role="img" aria-label="OMEGA Zero-Retention Topology: Client Electron/React, Spring Boot Gateway, FastAPI RAM Worker">
+  <defs>
+    <clipPath id="arch-clip">
+      <path d="${clip}" />
     </clipPath>
   </defs>
 
-  <g clip-path="url(#heroOuterClip)">
-    <rect x="0" y="0" width="1200" height="196" fill="url(#heroRoyalStage)"/>
-
-    <g filter="url(#heroSoftBlur)" opacity="${isDark ? '0.34' : '0.18'}">
-      <ellipse cx="600" cy="40" rx="340" ry="76" fill="${t.ambientSecondary}"/>
-      <ellipse cx="320" cy="160" rx="240" ry="80" fill="${t.ambientPrimary}"/>
-      <ellipse cx="890" cy="154" rx="240" ry="80" fill="${t.ambientPrimary}"/>
-    </g>
-
-    <rect x="26.5" y="18.5" width="1147" height="159" rx="18" fill="${t.panelBase}" fill-opacity="${isDark ? '0.46' : '0.68'}" filter="url(#heroCardShadow)"/>
-    <rect x="26.5" y="18.5" width="1147" height="159" rx="18" fill="url(#heroShellBg)"/>
-    <rect x="26.5" y="18.5" width="1147" height="159" rx="18" fill="url(#heroOpticalSheen)"/>
-    <rect x="26.5" y="18.5" width="1147" height="159" rx="18" stroke="${frameStroke}" stroke-width="1"/>
-    <line x1="68" y1="19.5" x2="1132" y2="19.5" stroke="url(#heroTopBevel)" stroke-width="1"/>
-
-    <text x="600" y="92" text-anchor="middle" class="display" font-size="48" font-weight="600" letter-spacing="-1.65" fill="${nameFill}">Andrés Felipe Guerra</text>
-    <text x="600" y="131" text-anchor="middle" class="display" font-size="19.5" font-weight="500" letter-spacing="-0.25" fill="${rolePrimaryFill}">Fullstack Software Engineer  <tspan fill="${roleSecondaryFill}">·  AI Systems &amp; AppSec</tspan></text>
+  <g clip-path="url(#arch-clip)">
+    <rect width="1200" height="136" fill="${t.bgBase}" />
   </g>
+  <path d="${outer}" fill="none" stroke="${t.borderHairline}" stroke-width="1" />
 
-  <rect x="0.5" y="0.5" width="1199" height="195" rx="24" stroke="url(#heroRimStroke)" stroke-width="1"/>
-  <line x1="36" y1="1.5" x2="1164" y2="1.5" stroke="url(#heroTopBevel)" stroke-width="1"/>
+  <!-- Schematic top rail -->
+  <text x="24" y="23" fill="${t.textMuted}" font-family="${FONT_MONO}" font-size="11.5" font-weight="600" letter-spacing="1.2">OMEGA // ZERO-RETENTION TOPOLOGY</text>
+  <text x="1176" y="23" text-anchor="end" fill="${t.accent}" font-family="${FONT_MONO}" font-size="11.5" font-weight="600" letter-spacing="1.1">RAM-ONLY · NO DISK PERSISTENCE</text>
+  <line x1="24" y1="32" x2="1176" y2="32" stroke="${t.borderHairline}" stroke-width="1" />
+
+  <!-- Node 1: Client -->
+  <path d="${n1}" fill="${t.bgSurface}" stroke="${t.borderSteel}" stroke-width="1" />
+  <text x="40" y="61" fill="${t.textMuted}" font-family="${FONT_MONO}" font-size="11" font-weight="600" letter-spacing="0.8">CLIENT · DESKTOP &amp; WEB</text>
+  <text x="40" y="83" fill="${t.textPrimary}" font-family="${FONT_SANS}" font-size="17" font-weight="600">Electron 45 · React 19</text>
+  <text x="40" y="102" fill="${t.textSecondary}" font-family="${FONT_MONO}" font-size="12.5">IPC local · ADB / iOS · OSINT</text>
+
+  <!-- Connector 1 -->
+  <line x1="352" y1="79" x2="418" y2="79" stroke="${t.accent}" stroke-width="1.5" />
+  <polygon points="417,74.5 426,79 417,83.5" fill="${t.accent}" />
+  <text x="389" y="69" text-anchor="middle" fill="${t.accent}" font-family="${FONT_MONO}" font-size="11" font-weight="700">JWT HS256</text>
+
+  <!-- Node 2: Gateway -->
+  <path d="${n2}" fill="${t.bgSurface}" stroke="${t.borderSteel}" stroke-width="1" />
+  <text x="444" y="61" fill="${t.textMuted}" font-family="${FONT_MONO}" font-size="11" font-weight="600" letter-spacing="0.8">GATEWAY · PUBLIC (:8080)</text>
+  <text x="444" y="83" fill="${t.textPrimary}" font-family="${FONT_SANS}" font-size="17" font-weight="600">Java 21 · Spring Boot 3.3</text>
+  <text x="444" y="102" fill="${t.textSecondary}" font-family="${FONT_MONO}" font-size="12.5">tmpfs · RBAC · Auditoría SHA-256</text>
+
+  <!-- Connector 2 -->
+  <line x1="774" y1="79" x2="840" y2="79" stroke="${t.accent}" stroke-width="1.5" />
+  <polygon points="839,74.5 848,79 839,83.5" fill="${t.accent}" />
+  <text x="811" y="69" text-anchor="middle" fill="${t.accent}" font-family="${FONT_MONO}" font-size="11" font-weight="700">TOKEN</text>
+
+  <!-- Node 3: Private Worker (highlighted chamfered containment zone) -->
+  <path d="${n3}" fill="${t.mode === 'dark' ? t.bgElevated : t.accentSoft}" stroke="${t.accent}" stroke-opacity="0.7" stroke-width="1" />
+  <line x1="850" y1="49" x2="850" y2="115" stroke="${t.accent}" stroke-width="2.5" />
+  <text x="866" y="61" fill="${t.accent}" font-family="${FONT_MONO}" font-size="11" font-weight="700" letter-spacing="0.8">PRIVATE WORKER · NO PORTS</text>
+  <text x="866" y="83" fill="${t.textPrimary}" font-family="${FONT_SANS}" font-size="17" font-weight="600">FastAPI (:memory:) · pgvector</text>
+  <text x="866" y="102" fill="${t.textSecondary}" font-family="${FONT_MONO}" font-size="12.5">MVT · YARA · STIX 2.1 · RRF</text>
 </svg>`;
 }
 
-function renderActionButtons(t) {
-  const buttons = [
-    { slug: 'portfolio', label: 'Portfolio', icon: 'globe', width: 124, primary: true },
-    { slug: 'linkedin', label: 'LinkedIn', icon: 'linkedin', width: 120, primary: false },
-    { slug: 'email', label: 'Email', icon: 'mail', width: 100, primary: false },
-    { slug: 'fiverr', label: 'Fiverr', icon: 'briefcase', width: 102, primary: false },
-    { slug: 'whatsapp', label: 'WhatsApp', icon: 'message', width: 132, primary: false },
+const ICONS = {
+  portfolio: `<circle cx="8" cy="8" r="6" fill="none" stroke="STROKE" stroke-width="1.4" /><ellipse cx="8" cy="8" rx="2.6" ry="6" fill="none" stroke="STROKE" stroke-width="1.2" /><line x1="2" y1="8" x2="14" y2="8" stroke="STROKE" stroke-width="1.2" />`,
+  linkedin: `<rect x="2" y="2" width="12" height="12" rx="2" fill="none" stroke="STROKE" stroke-width="1.4" /><circle cx="5.2" cy="5.3" r="0.8" fill="STROKE" /><line x1="5.2" y1="7.3" x2="5.2" y2="11.5" stroke="STROKE" stroke-width="1.4" stroke-linecap="round" /><path d="M 8 11.5 L 8 7.3 M 8 8.6 C 8 7.1 11 7.0 11 8.8 L 11 11.5" fill="none" stroke="STROKE" stroke-width="1.4" stroke-linecap="round" />`,
+  email: `<rect x="2" y="3.5" width="12" height="9" rx="1.5" fill="none" stroke="STROKE" stroke-width="1.4" /><path d="M 2.5 4.5 L 8 8.5 L 13.5 4.5" fill="none" stroke="STROKE" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />`,
+  fiverr: `<path d="M 4 6 L 12 6 L 12.8 13 L 3.2 13 Z" fill="none" stroke="STROKE" stroke-width="1.4" stroke-linejoin="round" /><path d="M 5.8 6 L 5.8 4.6 C 5.8 3.2 10.2 3.2 10.2 4.6 L 10.2 6" fill="none" stroke="STROKE" stroke-width="1.4" />`,
+  whatsapp: `<path d="M 8 2.2 A 5.6 5.6 0 1 1 3.7 11.4 L 2 13.5 L 4.4 12.6 A 5.6 5.6 0 0 1 8 2.2 Z" fill="none" stroke="STROKE" stroke-width="1.4" stroke-linejoin="round" />`,
+};
+
+function renderButtons(t) {
+  const items = [
+    { key: 'portfolio', label: 'Portfolio', w: 122, primary: true },
+    { key: 'linkedin', label: 'LinkedIn', w: 118, primary: false },
+    { key: 'email', label: 'Email', w: 98, primary: false },
+    { key: 'fiverr', label: 'Fiverr', w: 100, primary: false },
+    { key: 'whatsapp', label: 'WhatsApp', w: 124, primary: false },
   ];
 
-  const out = {};
-  for (const btn of buttons) {
-    const isPrimaryDark = btn.primary && t.mode === 'dark';
-    const bgFill = isPrimaryDark ? 'rgba(29, 78, 216, 0.72)' : btn.primary ? t.pillAccentFill : t.panelBase;
-    const strokeRef = isPrimaryDark ? 'rgba(191, 219, 254, 0.58)' : btn.primary ? t.pillAccentStroke : `url(#btnRimStroke)`;
-    const iconColor = isPrimaryDark ? '#FFFFFF' : btn.primary ? t.accentText : t.textSecondary;
-    const textColor = isPrimaryDark ? '#FFFFFF' : btn.primary ? t.accentText : t.text;
-    out[btn.slug] = `<svg xmlns="http://www.w3.org/2000/svg" width="${btn.width}" height="38" viewBox="0 0 ${btn.width} 38" fill="none" role="img" aria-label="${esc(btn.label)}">
-  <defs>
-    ${glassDefs(t, 'btn')}
-  </defs>
-  <rect x="0.5" y="0.5" width="${btn.width - 1}" height="37" rx="19" fill="${t.panelBase}"/>
-  ${btn.primary ? `<rect x="0.5" y="0.5" width="${btn.width - 1}" height="37" rx="19" fill="${bgFill}"/>` : `<rect x="0.5" y="0.5" width="${btn.width - 1}" height="37" rx="19" fill="url(#btnShellBg)"/>`}
-  <rect x="0.5" y="0.5" width="${btn.width - 1}" height="37" rx="19" stroke="${strokeRef}" stroke-width="1"/>
-  <line x1="18" y1="1.5" x2="${btn.width - 18}" y2="1.5" stroke="url(#btnTopBevel)" stroke-width="1"/>
-  <g transform="translate(15, 10)">
-    ${ICONS[btn.icon](iconColor)}
-  </g>
-  <text x="40" y="23.5" class="sans" font-size="13" font-weight="600" fill="${textColor}">${esc(btn.label)}</text>
+  for (const item of items) {
+    const bg = item.primary ? t.btnPrimaryBg : t.btnSecondaryBg;
+    const border = item.primary ? t.accent : t.btnSecondaryBorder;
+    const textFill = item.primary ? t.textPrimary : t.textStrong;
+    const iconStroke = item.primary ? t.accent : t.textSecondary;
+    const outer = chamferPath(0.5, 0.5, item.w - 1, 31, 6);
+    const iconSvg = ICONS[item.key].replaceAll('STROKE', iconStroke);
+
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${item.w}" height="32" viewBox="0 0 ${item.w} 32" role="img" aria-label="${escapeXml(item.label)}">
+  <path d="${outer}" fill="${bg}" stroke="${border}" stroke-width="1" />
+  <g transform="translate(13, 8)">${iconSvg}</g>
+  <text x="36" y="20.5" fill="${textFill}" font-family="${FONT_SANS}" font-size="13" font-weight="${item.primary ? '600' : '500'}" letter-spacing="-0.1">${escapeXml(item.label)}</text>
 </svg>`;
-  }
-  return out;
-}
-
-function renderCapabilities(t, sec) {
-  const columns = [
-    {
-      icon: 'layers',
-      security: false,
-      title: 'Backend & Arquitectura',
-      subtitle: 'Servicios modulares y persistencia auditada',
-      bullets: [
-        'APIs stateless en Java 21, Spring Boot 3 y FastAPI',
-        'Modelado PostgreSQL 16 (4FN) con Flyway y HNSW',
-        'Aislamiento multi-tenant, JWT HS256 y RBAC',
-      ],
-      footer: 'Hexagonal · DDD · OpenAPI',
-    },
-    {
-      icon: 'neural',
-      security: false,
-      title: 'Sistemas de IA & RAG',
-      subtitle: 'Recuperación híbrida y salida estructurada',
-      bullets: [
-        'Búsqueda RRF (pgvector + tsvector) con citas exactas',
-        'Pipelines tipados en Pydantic y LangChain LCEL',
-        'Reglas anti-alucinación y control de deriva',
-      ],
-      footer: 'pgvector · RAGAS · LLMs',
-    },
-    {
-      icon: 'shield',
-      security: true,
-      title: 'AppSec & Zero-Retention',
-      subtitle: 'Contención, validación y evidencia volátil',
-      bullets: [
-        'Ingesta en tmpfs y análisis RAM (:memory:)',
-        'Redes aisladas sin puertos públicos y anti-IDOR',
-        'Sanitización PDF AST, anti-Zip-Slip y hash SHA-256',
-      ],
-      footer: 'Zero-Retention · Fail-Closed · MVT',
-    },
-  ];
-
-  const panels = columns
-    .map((col, idx) => {
-      const theme = col.security ? sec : t;
-      const prefix = col.security ? 'capSec' : 'cap';
-      const x = idx * 407;
-      return renderGlassSurface({
-        x,
-        y: 2,
-        w: 386,
-        h: 208,
-        rx: 20,
-        prefix,
-        t: theme,
-        filterShadow: theme.mode === 'light',
-        inner: `
-          ${renderIconBadge(22, 20, col.icon, theme, {
-            size: 36,
-            accentStroke: theme.accentText,
-            wellFill: theme.iconWellFill,
-            wellStroke: theme.iconWellStroke,
-          })}
-          <text x="68" y="36" class="display" font-size="16.5" font-weight="600" letter-spacing="-0.25" fill="${theme.text}">${esc(col.title)}</text>
-          <text x="68" y="53" class="sans" font-size="12" font-weight="500" fill="${col.security ? theme.accentText : theme.textMuted}">${esc(col.subtitle)}</text>
-
-          <line x1="22" y1="70" x2="364" y2="70" stroke="${theme.divider}" stroke-width="1"/>
-
-          <circle cx="26" cy="92" r="2.2" fill="${theme.accentText}"/>
-          <text x="36" y="96" class="sans" font-size="12.6" fill="${theme.textSecondary}">${esc(col.bullets[0])}</text>
-
-          <circle cx="26" cy="118" r="2.2" fill="${theme.accentText}"/>
-          <text x="36" y="122" class="sans" font-size="12.6" fill="${theme.textSecondary}">${esc(col.bullets[1])}</text>
-
-          <circle cx="26" cy="144" r="2.2" fill="${theme.accentText}"/>
-          <text x="36" y="148" class="sans" font-size="12.6" fill="${theme.textSecondary}">${esc(col.bullets[2])}</text>
-
-          <line x1="22" y1="166" x2="364" y2="166" stroke="${theme.divider}" stroke-width="1"/>
-          <text x="22" y="189" class="mono" font-size="11.2" font-weight="500" fill="${theme.accentText}">${esc(col.footer)}</text>
-        `,
-      });
-    })
-    .join('\n');
-
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="216" viewBox="0 0 1200 216" fill="none" role="img" aria-label="Capacidades Técnicas — Backend, IA y AppSec">
-  <defs>
-    ${glassDefs(t, 'cap')}
-    ${glassDefs(sec, 'capSec')}
-  </defs>
-  ${panels}
-</svg>`;
-}
-
-function renderOmegaFeaturedCard(sec) {
-  const isDark = sec.mode === 'dark';
-  const nodeFill = isDark ? '#0A233A' : '#FFFFFF';
-  const nodeStroke = isDark ? 'rgba(110, 231, 183, 0.24)' : 'rgba(5, 150, 105, 0.22)';
-  const gatewayFill = isDark ? '#0D2C47' : '#FFFFFF';
-  const gatewayStroke = isDark ? 'rgba(52, 211, 153, 0.44)' : 'rgba(5, 150, 105, 0.36)';
-  const arrowStroke = isDark ? '#34D399' : '#059669';
-  const orbFill = isDark ? '#091E3A' : '#0F294A';
-  const orbStroke = isDark ? 'rgba(110, 231, 183, 0.48)' : 'rgba(5, 150, 105, 0.45)';
-
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="252" viewBox="0 0 1200 252" fill="none" role="img" aria-label="OMEGA — Plataforma defensiva de Threat Intelligence y análisis forense">
-  <defs>
-    ${glassDefs(sec, 'omg')}
-    <clipPath id="omgClip">
-      <rect x="0.5" y="2.5" width="1199" height="247" rx="22"/>
-    </clipPath>
-    <marker id="secArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-      <path d="M 1 1 L 9 5 L 1 9 z" fill="${arrowStroke}"/>
-    </marker>
-  </defs>
-
-  ${renderGlassSurface({
-    x: 0,
-    y: 2,
-    w: 1200,
-    h: 248,
-    rx: 22,
-    prefix: 'omg',
-    t: sec,
-    filterShadow: !isDark,
-    inner: `
-      <g clip-path="url(#omgClip)">
-        <g filter="url(#omgSoftBlur)" opacity="${isDark ? '0.24' : '0.12'}">
-          <circle cx="140" cy="60" r="140" fill="${sec.ambientPrimary}"/>
-          <circle cx="1020" cy="210" r="150" fill="${sec.ambientSecondary}"/>
-        </g>
-      </g>
-
-      <!-- Emblem + Title + Security Badge -->
-      <circle cx="48" cy="46" r="22" fill="${orbFill}" stroke="${orbStroke}" stroke-width="1.2"/>
-      <text x="48" y="54" text-anchor="middle" class="display" font-size="24" font-weight="600" fill="#FFFFFF">&#937;</text>
-
-      <text x="84" y="42" class="display" font-size="21" font-weight="600" letter-spacing="-0.4" fill="${sec.text}">OMEGA</text>
-      <text x="84" y="61" class="sans" font-size="13" font-weight="500" fill="${sec.accentText}">Threat Intelligence · Forense Móvil/Host · Modo Zero-Retention</text>
-
-      <rect x="974" y="29" width="200" height="26" rx="13" fill="${sec.pillAccentFill}" stroke="${sec.pillAccentStroke}" stroke-width="1"/>
-      <text x="1074" y="46" text-anchor="middle" class="mono" font-size="11" font-weight="600" fill="${sec.accentText}">PROYECTO PRINCIPAL · v1.3.1</text>
-
-      <!-- Value summary -->
-      <text x="26" y="102" class="sans" font-size="14" fill="${sec.textSecondary}">Plataforma defensiva para detectar e investigar spyware comercial (Pegasus / Predator), correlacionando</text>
-      <text x="26" y="123" class="sans" font-size="14" fill="${sec.textSecondary}">reportes CTI mediante RAG híbrido (pgvector + RRF), triaje MVT/iOS/ADB en RAM y auditoría OSINT pasiva.</text>
-
-      <!-- Compact 3-zone Zero-Retention flow -->
-      <g transform="translate(26, 146)">
-        <!-- Zone 1 -->
-        <rect x="0.5" y="0.5" width="286" height="78" rx="14" fill="${nodeFill}" stroke="${nodeStroke}" stroke-width="1"/>
-        <text x="18" y="24" class="mono" font-size="10.2" font-weight="600" fill="${sec.accentText}">CLIENTE HÍBRIDO</text>
-        <text x="18" y="45" class="display" font-size="15" font-weight="600" fill="${sec.text}">React 19 + Electron 45</text>
-        <text x="18" y="64" class="sans" font-size="11.8" fill="${sec.textMuted}">Copiloto CTI · IPC local Windows / ADB / iOS</text>
-
-        <line x1="292" y1="39.5" x2="340" y2="39.5" stroke="${arrowStroke}" stroke-width="1.8" marker-end="url(#secArrow)"/>
-        <text x="316" y="29" text-anchor="middle" class="mono" font-size="9.8" font-weight="600" fill="${sec.accentText}">JWT</text>
-
-        <!-- Zone 2 -->
-        <rect x="348.5" y="0.5" width="400" height="78" rx="14" fill="${gatewayFill}" stroke="${gatewayStroke}" stroke-width="1.2"/>
-        <text x="366" y="24" class="mono" font-size="10.2" font-weight="600" fill="${sec.accentText}">GATEWAY · OMEGA-PUBLIC (:8080)</text>
-        <text x="366" y="45" class="display" font-size="15" font-weight="600" fill="${sec.text}">Java 21 · Spring Boot 3.3</text>
-        <text x="366" y="64" class="sans" font-size="11.8" fill="${sec.textMuted}">Ingesta tmpfs · RRF híbrido · RBAC · Auditoría SHA-256</text>
-
-        <line x1="754" y1="39.5" x2="804" y2="39.5" stroke="${arrowStroke}" stroke-width="1.8" marker-end="url(#secArrow)"/>
-        <text x="779" y="29" text-anchor="middle" class="mono" font-size="9.5" font-weight="600" fill="${sec.accentText}">Token</text>
-
-        <!-- Zone 3 -->
-        <rect x="812.5" y="0.5" width="335" height="78" rx="14" fill="${nodeFill}" stroke="${nodeStroke}" stroke-width="1"/>
-        <text x="830" y="24" class="mono" font-size="10.2" font-weight="600" fill="${sec.accentText}">OMEGA-PRIVATE · SIN PUERTOS</text>
-        <text x="830" y="45" class="display" font-size="15" font-weight="600" fill="${sec.text}">FastAPI (:memory:) + pgvector</text>
-        <text x="830" y="64" class="sans" font-size="11.8" fill="${sec.textMuted}">MVT · YARA · STIX 2.1 · Aislamiento tenant_id</text>
-      </g>
-    `,
-  })}
-</svg>`;
-}
-
-const SECONDARY_PROJECTS = [
-  {
-    slug: 'guardian',
-    icon: 'eye',
-    security: true,
-    title: 'GUARDIAN',
-    subtitle: 'Seguridad Vial Multi-Agente',
-    line1: 'Predice riesgos en transporte terrestre',
-    line2: 'con 3 agentes (Copiloto, Centinela,',
-    line3: 'Oráculo) sobre Voxel51 FiftyOne.',
-    meta: 'Python · FiftyOne · Gemini AI',
-  },
-  {
-    slug: 'cv',
-    icon: 'doc',
-    security: false,
-    title: 'CV Intelligence',
-    subtitle: 'Evaluador de Hojas de Vida',
-    line1: 'Contrasta currículums PDF frente a',
-    line2: 'vacantes con extracción estructurada',
-    line3: 'y scoring reproducible en Pydantic.',
-    meta: 'Python 3.12 · LangChain · Pydantic',
-  },
-  {
-    slug: 'toolrent',
-    icon: 'layers',
-    security: false,
-    title: 'ToolRent',
-    subtitle: 'SaaS Industrial (DDD)',
-    line1: 'Renta de maquinaria organizada en 8',
-    line2: 'módulos Maven, esquema PostgreSQL 4FN',
-    line3: 'con Flyway, JWT RBAC y SPA en Vite.',
-    meta: 'Java 17 · Spring Boot 3 · PostgreSQL',
-  },
-];
-
-function renderSecondaryCard(proj, t, sec) {
-  const accentColor = proj.security ? sec.accentText : t.accentText;
-  const wellFill = proj.security ? sec.iconWellFill : t.iconWellFill;
-  const wellStroke = proj.security ? sec.iconWellStroke : t.iconWellStroke;
-
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="386" height="190" viewBox="0 0 386 190" fill="none" role="img" aria-label="${esc(proj.title)} — ${esc(proj.subtitle)}">
-  <defs>
-    ${glassDefs(t, 'sec')}
-  </defs>
-  ${renderGlassSurface({
-    x: 0,
-    y: 2,
-    w: 386,
-    h: 184,
-    rx: 18,
-    prefix: 'sec',
-    t,
-    filterShadow: t.mode === 'light',
-    inner: `
-      ${renderIconBadge(20, 18, proj.icon, t, { size: 34, accentStroke: accentColor, wellFill, wellStroke })}
-      <text x="64" y="34" class="display" font-size="18" font-weight="600" letter-spacing="-0.3" fill="${t.text}">${esc(proj.title)}</text>
-      <text x="64" y="51" class="sans" font-size="12.5" font-weight="500" fill="${proj.security ? accentColor : t.textMuted}">${esc(proj.subtitle)}</text>
-
-      <line x1="20" y1="68" x2="366" y2="68" stroke="${t.divider}" stroke-width="1"/>
-
-      <text x="20" y="92" class="sans" font-size="14" font-weight="400" fill="${t.textSecondary}">${esc(proj.line1)}</text>
-      <text x="20" y="112" class="sans" font-size="14" font-weight="400" fill="${t.textSecondary}">${esc(proj.line2)}</text>
-      <text x="20" y="132" class="sans" font-size="14" font-weight="400" fill="${t.textSecondary}">${esc(proj.line3)}</text>
-
-      <text x="20" y="164" class="mono" font-size="11.8" font-weight="500" fill="${accentColor}">${esc(proj.meta)}</text>
-      <text x="366" y="164" text-anchor="end" class="sans" font-size="13.5" font-weight="600" fill="${accentColor}">&#8599;</text>
-    `,
-  })}
-</svg>`;
-}
-
-for (const [mode, t] of Object.entries(GLASS_THEMES)) {
-  const sec = SECURITY_THEMES[mode];
-  fs.writeFileSync(path.join(OUT_DIR, `hero-${mode}.svg`), renderHero(t), 'utf8');
-  fs.writeFileSync(path.join(OUT_DIR, `capabilities-${mode}.svg`), renderCapabilities(t, sec), 'utf8');
-  fs.writeFileSync(path.join(OUT_DIR, `omega-featured-${mode}.svg`), renderOmegaFeaturedCard(sec), 'utf8');
-
-  const buttons = renderActionButtons(t);
-  for (const [slug, svg] of Object.entries(buttons)) {
-    fs.writeFileSync(path.join(OUT_DIR, `btn-${slug}-${mode}.svg`), svg, 'utf8');
-  }
-
-  for (const proj of SECONDARY_PROJECTS) {
-    fs.writeFileSync(path.join(OUT_DIR, `sec-${proj.slug}-${mode}.svg`), renderSecondaryCard(proj, t, sec), 'utf8');
+    writeSvg(`btn-${item.key}-${t.mode}.svg`, svg);
   }
 }
 
-console.log('Generated v8 profile-first SVGs in ./assets/v8/');
+function main() {
+  ensureCleanDir(OUT_DIR);
+  for (const t of Object.values(GOTHAM_THEMES)) {
+    writeSvg(`hero-${t.mode}.svg`, renderHero(t));
+    writeSvg(`omega-arch-${t.mode}.svg`, renderOmegaArch(t));
+    renderButtons(t);
+  }
+  console.log('Generated v9 Gotham Noir SVGs in ./assets/v9/');
+}
+
+main();

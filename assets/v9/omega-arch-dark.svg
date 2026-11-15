@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="136" viewBox="0 0 1200 136" role="img" aria-label="OMEGA Zero-Retention Topology: Client Electron/React, Spring Boot Gateway, FastAPI RAM Worker">
+  <defs>
+    <clipPath id="arch-clip">
+      <path d="M 11 1 L 1199 1 L 1199 125 L 1189 135 L 1 135 L 1 11 Z" />
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#arch-clip)">
+    <rect width="1200" height="136" fill="#07080B" />
+  </g>
+  <path d="M 10.5 0.5 L 1199.5 0.5 L 1199.5 125.5 L 1189.5 135.5 L 0.5 135.5 L 0.5 10.5 Z" fill="none" stroke="#1F2530" stroke-width="1" />
+
+  <!-- Schematic top rail -->
+  <text x="24" y="23" fill="#687182" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="600" letter-spacing="1.2">OMEGA // ZERO-RETENTION TOPOLOGY</text>
+  <text x="1176" y="23" text-anchor="end" fill="#D4A72C" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="600" letter-spacing="1.1">RAM-ONLY · NO DISK PERSISTENCE</text>
+  <line x1="24" y1="32" x2="1176" y2="32" stroke="#1F2530" stroke-width="1" />
+
+  <!-- Node 1: Client -->
+  <path d="M 31 42 L 350 42 L 350 109 L 343 116 L 24 116 L 24 49 Z" fill="#0B0D12" stroke="#2B3342" stroke-width="1" />
+  <text x="40" y="61" fill="#687182" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" font-weight="600" letter-spacing="0.8">CLIENT · DESKTOP &amp; WEB</text>
+  <text x="40" y="83" fill="#F0F2F5" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="17" font-weight="600">Electron 45 · React 19</text>
+  <text x="40" y="102" fill="#9099A8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5">IPC local · ADB / iOS · OSINT</text>
+
+  <!-- Connector 1 -->
+  <line x1="352" y1="79" x2="418" y2="79" stroke="#D4A72C" stroke-width="1.5" />
+  <polygon points="417,74.5 426,79 417,83.5" fill="#D4A72C" />
+  <text x="389" y="69" text-anchor="middle" fill="#D4A72C" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" font-weight="700">JWT HS256</text>
+
+  <!-- Node 2: Gateway -->
+  <path d="M 435 42 L 772 42 L 772 109 L 765 116 L 428 116 L 428 49 Z" fill="#0B0D12" stroke="#2B3342" stroke-width="1" />
+  <text x="444" y="61" fill="#687182" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" font-weight="600" letter-spacing="0.8">GATEWAY · PUBLIC (:8080)</text>
+  <text x="444" y="83" fill="#F0F2F5" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="17" font-weight="600">Java 21 · Spring Boot 3.3</text>
+  <text x="444" y="102" fill="#9099A8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5">tmpfs · RBAC · Auditoría SHA-256</text>
+
+  <!-- Connector 2 -->
+  <line x1="774" y1="79" x2="840" y2="79" stroke="#D4A72C" stroke-width="1.5" />
+  <polygon points="839,74.5 848,79 839,83.5" fill="#D4A72C" />
+  <text x="811" y="69" text-anchor="middle" fill="#D4A72C" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" font-weight="700">TOKEN</text>
+
+  <!-- Node 3: Private Worker (highlighted chamfered containment zone) -->
+  <path d="M 857 42 L 1176 42 L 1176 109 L 1169 116 L 850 116 L 850 49 Z" fill="#10131B" stroke="#D4A72C" stroke-opacity="0.7" stroke-width="1" />
+  <line x1="850" y1="49" x2="850" y2="115" stroke="#D4A72C" stroke-width="2.5" />
+  <text x="866" y="61" fill="#D4A72C" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" font-weight="700" letter-spacing="0.8">PRIVATE WORKER · NO PORTS</text>
+  <text x="866" y="83" fill="#F0F2F5" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="17" font-weight="600">FastAPI (:memory:) · pgvector</text>
+  <text x="866" y="102" fill="#9099A8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5">MVT · YARA · STIX 2.1 · RRF</text>
+</svg>
