@@ -211,12 +211,12 @@ function renderTelemetry(data, t) {
 }
 
 const data = await fetchTelemetry();
-const outDir = path.resolve('assets/v4');
+const outDir = path.resolve('assets/v5');
 fs.mkdirSync(outDir, { recursive: true });
 fs.writeFileSync(path.join(outDir, 'telemetry-dark.svg'), renderTelemetry(data, GLASS_THEMES.dark), 'utf8');
 fs.writeFileSync(path.join(outDir, 'telemetry-light.svg'), renderTelemetry(data, GLASS_THEMES.light), 'utf8');
 console.log(
-  'Generated Apple-Glass telemetry SVGs in ./assets/v4/:',
+  'Generated Apple-Glass telemetry SVGs in ./assets/v5/:',
   JSON.stringify({
     totalContributions: data.totalContributions,
     totalCommits: data.totalCommits,

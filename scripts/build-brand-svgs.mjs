@@ -9,7 +9,7 @@ import {
   renderPillRow,
 } from './glass-tokens.mjs';
 
-const OUT_DIR = path.resolve('assets/v4');
+const OUT_DIR = path.resolve('assets/v5');
 fs.mkdirSync(OUT_DIR, { recursive: true });
 
 const ICONS = {
@@ -52,129 +52,60 @@ function renderIconBadge(x, y, iconName, t, { size = 34, accent = true } = {}) {
 }
 
 function renderHero(t) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="318" viewBox="0 0 1200 318" fill="none" role="img" aria-label="Andrés Felipe Guerra — Fullstack Software Engineer">
+  const isDark = t.mode === 'dark';
+  const baseStart = isDark ? '#061547' : '#EBF1FD';
+  const baseMid = isDark ? '#0D2C8A' : '#F8FAFF';
+  const baseEnd = isDark ? '#071B5B' : '#E6EEFC';
+  const nameFill = isDark ? '#FFFFFF' : '#0B1F66';
+  const rolePrimaryFill = isDark ? '#E0EBFF' : '#1E293B';
+  const roleSecondaryFill = isDark ? '#93C5FD' : '#1D4ED8';
+  const sheenOpacity = isDark ? '0.075' : '0.45';
+  const frameStroke = isDark ? 'rgba(191, 219, 254, 0.18)' : 'rgba(29, 78, 216, 0.14)';
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="236" viewBox="0 0 1200 236" fill="none" role="img" aria-label="Andrés Felipe Guerra — Fullstack Software Engineer">
   <defs>
     ${glassDefs(t, 'hero')}
+    <linearGradient id="heroRoyalStage" x1="0" y1="0" x2="1200" y2="236" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="${baseStart}"/>
+      <stop offset="50%" stop-color="${baseMid}"/>
+      <stop offset="100%" stop-color="${baseEnd}"/>
+    </linearGradient>
+    <linearGradient id="heroOpticalSheen" x1="160" y1="0" x2="980" y2="236" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0"/>
+      <stop offset="48%" stop-color="#FFFFFF" stop-opacity="${sheenOpacity}"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
     <clipPath id="heroOuterClip">
-      <rect x="0.5" y="0.5" width="1199" height="317" rx="26"/>
+      <rect x="0.5" y="0.5" width="1199" height="235" rx="26"/>
     </clipPath>
-    <style>
-      @keyframes livePulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.42; }
-      }
-      @keyframes softFloat {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-3px); }
-      }
-      .liveDot { animation: livePulse 3.6s ease-in-out infinite; }
-      .floatGlass { animation: softFloat 6.5s ease-in-out infinite; }
-    </style>
   </defs>
 
   <g clip-path="url(#heroOuterClip)">
-    <rect x="0" y="0" width="1200" height="318" fill="${t.canvas}"/>
+    <!-- Deep Royal Blue / Frosted Sapphire Stage -->
+    <rect x="0" y="0" width="1200" height="236" fill="url(#heroRoyalStage)"/>
 
-    <!-- Calm atmospheric ambient light behind translucent stacked glass cards -->
-    <g filter="url(#heroSoftBlur)" opacity="${t.ambientOpacity}">
-      <circle cx="956" cy="112" r="142" fill="${t.ambientPrimary}"/>
-      <circle cx="842" cy="222" r="118" fill="${t.ambientSecondary}"/>
+    <!-- Restrained internal glass refraction (Apple + Kowalski atmospheric depth) -->
+    <g filter="url(#heroSoftBlur)" opacity="${isDark ? '0.38' : '0.20'}">
+      <ellipse cx="600" cy="48" rx="340" ry="86" fill="${t.ambientSecondary}"/>
+      <ellipse cx="320" cy="182" rx="240" ry="90" fill="${t.ambientPrimary}"/>
+      <ellipse cx="890" cy="176" rx="240" ry="90" fill="${t.ambientPrimary}"/>
     </g>
 
-    <!-- Subtle hairline grid texture on the right canvas -->
-    <g opacity="${t.mode === 'dark' ? '0.045' : '0.04'}">
-      <line x1="720" y1="0" x2="720" y2="318" stroke="${t.text}" stroke-width="1"/>
-      <line x1="940" y1="0" x2="940" y2="318" stroke="${t.text}" stroke-width="1"/>
-      <line x1="680" y1="108" x2="1200" y2="108" stroke="${t.text}" stroke-width="1"/>
-      <line x1="680" y1="212" x2="1200" y2="212" stroke="${t.text}" stroke-width="1"/>
-    </g>
+    <!-- Recessed Inner Frosted Glass Lens (no icons, pure layered glass depth) -->
+    <rect x="26.5" y="20.5" width="1147" height="195" rx="20" fill="${t.panelBase}" fill-opacity="${isDark ? '0.46' : '0.68'}" filter="url(#heroCardShadow)"/>
+    <rect x="26.5" y="20.5" width="1147" height="195" rx="20" fill="url(#heroShellBg)"/>
+    <rect x="26.5" y="20.5" width="1147" height="195" rx="20" fill="url(#heroOpticalSheen)"/>
+    <rect x="26.5" y="20.5" width="1147" height="195" rx="20" stroke="${frameStroke}" stroke-width="1"/>
+    <line x1="68" y1="21.5" x2="1132" y2="21.5" stroke="url(#heroTopBevel)" stroke-width="1"/>
 
-    <!-- Left Editorial Column -->
-    <g transform="translate(52, 38)">
-      <!-- Location & Practice Capsule -->
-      <rect x="0.5" y="0.5" width="270" height="29" rx="14.5" fill="${t.tileBase}" stroke="url(#heroRimStroke)" stroke-width="1"/>
-      <circle cx="16" cy="15" r="3.5" fill="${t.statusOk}" class="liveDot"/>
-      <text x="29" y="19" class="sans" font-size="11.8" font-weight="500" fill="${t.textSecondary}">Bucaramanga, CO  ·  AG Engineering</text>
-
-      <!-- Display Name -->
-      <text x="0" y="92" class="display" font-size="44" font-weight="600" letter-spacing="-1.45" fill="${t.text}">Andrés Felipe Guerra</text>
-
-      <!-- Role Line -->
-      <text x="0" y="129" class="display" font-size="20" font-weight="500" letter-spacing="-0.35" fill="${t.text}">Fullstack Software Engineer  <tspan fill="${t.accentText}">·  AI Systems &amp; AppSec</tspan></text>
-
-      <!-- Editorial Subcopy -->
-      <text x="0" y="162" class="sans" font-size="14.5" font-weight="400" fill="${t.textMuted}">Diseño arquitecturas hexagonales, motores RAG híbridos y tooling defensivo.</text>
-
-      <!-- Frosted Bottom Metadata Dock -->
-      <g transform="translate(0, 188)">
-        <rect x="0.5" y="0.5" width="618" height="58" rx="16" fill="${t.panelBase}" stroke="url(#heroRimStroke)" stroke-width="1"/>
-        <rect x="0.5" y="0.5" width="618" height="58" rx="16" fill="url(#heroShellBg)"/>
-        <line x1="18" y1="1.5" x2="600" y2="1.5" stroke="url(#heroTopBevel)" stroke-width="1"/>
-
-        <text x="20" y="23" class="sans" font-size="10.8" font-weight="500" fill="${t.textMuted}">Core Stack</text>
-        <text x="20" y="42" class="sans" font-size="13.2" font-weight="600" fill="${t.text}">Python · Java · React</text>
-
-        <line x1="196" y1="13" x2="196" y2="45" stroke="${t.divider}" stroke-width="1"/>
-
-        <text x="216" y="23" class="sans" font-size="10.8" font-weight="500" fill="${t.textMuted}">Arquitectura</text>
-        <text x="216" y="42" class="sans" font-size="13.2" font-weight="600" fill="${t.text}">DDD · pgvector · Docker</text>
-
-        <line x1="404" y1="13" x2="404" y2="45" stroke="${t.divider}" stroke-width="1"/>
-
-        <text x="424" y="23" class="sans" font-size="10.8" font-weight="500" fill="${t.textMuted}">Portfolio</text>
-        <text x="424" y="42" class="sans" font-size="13" font-weight="600" fill="${t.accentText}">agengineering.workers.dev</text>
-      </g>
-    </g>
-
-    <!-- Right Spatial Layered Frosted Glass Stack -->
-    <g transform="translate(718, 28)">
-      <!-- Back Layer (Recessed Context) -->
-      <g transform="translate(56, 0)" opacity="0.92">
-        <rect x="0.5" y="0.5" width="372" height="84" rx="18" fill="${t.tileBase}" filter="url(#heroCardShadow)"/>
-        <rect x="0.5" y="0.5" width="372" height="84" rx="18" fill="url(#heroTileBg)" stroke="url(#heroRimStroke)" stroke-width="1"/>
-        <line x1="20" y1="1.5" x2="352" y2="1.5" stroke="url(#heroTopBevel)" stroke-width="1"/>
-        <text x="20" y="27" class="sans" font-size="12.5" font-weight="600" fill="${t.text}">AI Systems &amp; Hybrid RAG</text>
-        <text x="352" y="27" text-anchor="end" class="mono" font-size="11" font-weight="600" fill="${t.accentText}">RRF + Vec</text>
-        <text x="20" y="48" class="sans" font-size="11.8" fill="${t.textMuted}">LangChain · Pydantic · pgvector 768d</text>
-      </g>
-
-      <!-- Middle Elevated Frosted Layer (Spotlight Feature) -->
-      <g class="floatGlass">
-        ${renderGlassSurface({
-          x: 10,
-          y: 72,
-          w: 416,
-          h: 124,
-          rx: 20,
-          prefix: 'hero',
-          t,
-          filterShadow: true,
-          inner: `
-            ${renderIconBadge(20, 20, 'shield', t, { size: 34, accent: true })}
-            <text x="66" y="35" class="display" font-size="15.5" font-weight="600" letter-spacing="-0.2" fill="${t.text}">OMEGA Platform</text>
-            <text x="66" y="51" class="sans" font-size="11.8" fill="${t.textMuted}">Threat Intelligence &amp; Forensics</text>
-            <rect x="328" y="21" width="68" height="23" rx="11.5" fill="${t.pillAccentFill}" stroke="${t.pillAccentStroke}" stroke-width="1"/>
-            <text x="362" y="36" text-anchor="middle" class="mono" font-size="10.8" font-weight="600" fill="${t.accentText}">v1.3.1</text>
-            <line x1="20" y1="69" x2="396" y2="69" stroke="${t.divider}" stroke-width="1"/>
-            ${renderPillRow(['Java 21', 'Spring Boot 3', 'FastAPI', 'Electron'], t, { startX: 20, y: 83, height: 26, fontSize: 11, gap: 8 })}
-          `,
-        })}
-      </g>
-
-      <!-- Front Compact Frosted Pill Layer -->
-      <g transform="translate(66, 208)">
-        <rect x="0.5" y="0.5" width="364" height="58" rx="16" fill="${t.tileBase}" filter="url(#heroCardShadow)"/>
-        <rect x="0.5" y="0.5" width="364" height="58" rx="16" fill="url(#heroTileBg)" stroke="url(#heroRimStroke)" stroke-width="1"/>
-        <line x1="18" y1="1.5" x2="346" y2="1.5" stroke="url(#heroTopBevel)" stroke-width="1"/>
-        ${renderIconBadge(14, 12, 'layers', t, { size: 34, accent: false })}
-        <text x="60" y="27" class="sans" font-size="12.5" font-weight="600" fill="${t.text}">Backend · Cloud · Automation</text>
-        <text x="60" y="44" class="sans" font-size="11.5" fill="${t.textMuted}">Hexagonal DDD · PostgreSQL 16 · Baileys · n8n</text>
-      </g>
-    </g>
+    <!-- Pure Typographic Focal Block: Name + Position Only -->
+    <text x="600" y="108" text-anchor="middle" class="display" font-size="52" font-weight="600" letter-spacing="-1.8" fill="${nameFill}">Andrés Felipe Guerra</text>
+    <text x="600" y="148" text-anchor="middle" class="display" font-size="19.5" font-weight="500" letter-spacing="-0.25" fill="${rolePrimaryFill}">Fullstack Software Engineer  <tspan fill="${roleSecondaryFill}">·  AI Systems &amp; AppSec</tspan></text>
   </g>
 
-  <rect x="0.5" y="0.5" width="1199" height="317" rx="26" stroke="url(#heroRimStroke)" stroke-width="1"/>
-  <line x1="30" y1="1.5" x2="1170" y2="1.5" stroke="url(#heroTopBevel)" stroke-width="1"/>
+  <!-- Crisp 1px Specular Rim + Top Light Bevel -->
+  <rect x="0.5" y="0.5" width="1199" height="235" rx="26" stroke="url(#heroRimStroke)" stroke-width="1"/>
+  <line x1="36" y1="1.5" x2="1164" y2="1.5" stroke="url(#heroTopBevel)" stroke-width="1"/>
 </svg>`;
 }
 
@@ -189,16 +120,17 @@ function renderActionButtons(t) {
 
   const out = {};
   for (const btn of buttons) {
-    const bgFill = btn.primary ? t.pillAccentFill : t.panelBase;
-    const strokeRef = btn.primary ? t.pillAccentStroke : `url(#btnRimStroke)`;
-    const iconColor = btn.primary ? t.accentText : t.textSecondary;
-    const textColor = btn.primary ? t.accentText : t.text;
+    const isPrimaryDark = btn.primary && t.mode === 'dark';
+    const bgFill = isPrimaryDark ? 'rgba(29, 78, 216, 0.72)' : btn.primary ? t.pillAccentFill : t.panelBase;
+    const strokeRef = isPrimaryDark ? 'rgba(191, 219, 254, 0.58)' : btn.primary ? t.pillAccentStroke : `url(#btnRimStroke)`;
+    const iconColor = isPrimaryDark ? '#FFFFFF' : btn.primary ? t.accentText : t.textSecondary;
+    const textColor = isPrimaryDark ? '#FFFFFF' : btn.primary ? t.accentText : t.text;
     out[btn.slug] = `<svg xmlns="http://www.w3.org/2000/svg" width="${btn.width}" height="38" viewBox="0 0 ${btn.width} 38" fill="none" role="img" aria-label="${esc(btn.label)}">
   <defs>
     ${glassDefs(t, 'btn')}
   </defs>
-  <rect x="0.5" y="0.5" width="${btn.width - 1}" height="37" rx="19" fill="${bgFill}"/>
-  ${btn.primary ? '' : `<rect x="0.5" y="0.5" width="${btn.width - 1}" height="37" rx="19" fill="url(#btnShellBg)"/>`}
+  <rect x="0.5" y="0.5" width="${btn.width - 1}" height="37" rx="19" fill="${t.panelBase}"/>
+  ${btn.primary ? `<rect x="0.5" y="0.5" width="${btn.width - 1}" height="37" rx="19" fill="${bgFill}"/>` : `<rect x="0.5" y="0.5" width="${btn.width - 1}" height="37" rx="19" fill="url(#btnShellBg)"/>`}
   <rect x="0.5" y="0.5" width="${btn.width - 1}" height="37" rx="19" stroke="${strokeRef}" stroke-width="1"/>
   <line x1="18" y1="1.5" x2="${btn.width - 18}" y2="1.5" stroke="url(#btnTopBevel)" stroke-width="1"/>
   <g transform="translate(15, 10)">
@@ -560,4 +492,4 @@ for (const [mode, t] of Object.entries(GLASS_THEMES)) {
   }
 }
 
-console.log('Generated Apple + Glassmorphism SVGs in ./assets/v4/');
+console.log('Generated Apple + Glassmorphism SVGs in ./assets/v5/');

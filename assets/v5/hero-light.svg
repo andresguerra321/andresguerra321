@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="236" viewBox="0 0 1200 236" fill="none" role="img" aria-label="Andrés Felipe Guerra — Fullstack Software Engineer">
+  <defs>
+    
+    <linearGradient id="heroShellBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.90"/>
+      <stop offset="100%" stop-color="#F5F8FF" stop-opacity="0.76"/>
+    </linearGradient>
+    <linearGradient id="heroTileBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.88"/>
+    </linearGradient>
+    <linearGradient id="heroRimStroke" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="rgba(15, 23, 42, 0.08)"/>
+      <stop offset="38%" stop-color="rgba(29, 78, 216, 0.12)"/>
+      <stop offset="72%" stop-color="rgba(29, 78, 216, 0.28)"/>
+      <stop offset="100%" stop-color="rgba(15, 23, 42, 0.09)"/>
+    </linearGradient>
+    <linearGradient id="heroTopBevel" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0"/>
+      <stop offset="22%" stop-color="rgba(255, 255, 255, 0.98)"/>
+      <stop offset="78%" stop-color="rgba(255, 255, 255, 0.98)"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="heroSoftBlur" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="52"/>
+    </filter>
+    <filter id="heroCardShadow" x="-8%" y="-12%" width="116%" height="132%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#0F172A" flood-opacity="0.075"/>
+    </filter>
+    <style>
+      .display { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI', Helvetica, Arial, sans-serif; }
+      .sans { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', 'Segoe UI', Helvetica, Arial, sans-serif; }
+      .mono { font-family: 'SF Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace; }
+    </style>
+    <linearGradient id="heroRoyalStage" x1="0" y1="0" x2="1200" y2="236" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#EBF1FD"/>
+      <stop offset="50%" stop-color="#F8FAFF"/>
+      <stop offset="100%" stop-color="#E6EEFC"/>
+    </linearGradient>
+    <linearGradient id="heroOpticalSheen" x1="160" y1="0" x2="980" y2="236" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0"/>
+      <stop offset="48%" stop-color="#FFFFFF" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <clipPath id="heroOuterClip">
+      <rect x="0.5" y="0.5" width="1199" height="235" rx="26"/>
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#heroOuterClip)">
+    <!-- Deep Royal Blue / Frosted Sapphire Stage -->
+    <rect x="0" y="0" width="1200" height="236" fill="url(#heroRoyalStage)"/>
+
+    <!-- Restrained internal glass refraction (Apple + Kowalski atmospheric depth) -->
+    <g filter="url(#heroSoftBlur)" opacity="0.20">
+      <ellipse cx="600" cy="48" rx="340" ry="86" fill="#60A5FA"/>
+      <ellipse cx="320" cy="182" rx="240" ry="90" fill="#1D4ED8"/>
+      <ellipse cx="890" cy="176" rx="240" ry="90" fill="#1D4ED8"/>
+    </g>
+
+    <!-- Recessed Inner Frosted Glass Lens (no icons, pure layered glass depth) -->
+    <rect x="26.5" y="20.5" width="1147" height="195" rx="20" fill="#F6F9FF" fill-opacity="0.68" filter="url(#heroCardShadow)"/>
+    <rect x="26.5" y="20.5" width="1147" height="195" rx="20" fill="url(#heroShellBg)"/>
+    <rect x="26.5" y="20.5" width="1147" height="195" rx="20" fill="url(#heroOpticalSheen)"/>
+    <rect x="26.5" y="20.5" width="1147" height="195" rx="20" stroke="rgba(29, 78, 216, 0.14)" stroke-width="1"/>
+    <line x1="68" y1="21.5" x2="1132" y2="21.5" stroke="url(#heroTopBevel)" stroke-width="1"/>
+
+    <!-- Pure Typographic Focal Block: Name + Position Only -->
+    <text x="600" y="108" text-anchor="middle" class="display" font-size="52" font-weight="600" letter-spacing="-1.8" fill="#0B1F66">Andrés Felipe Guerra</text>
+    <text x="600" y="148" text-anchor="middle" class="display" font-size="19.5" font-weight="500" letter-spacing="-0.25" fill="#1E293B">Fullstack Software Engineer  <tspan fill="#1D4ED8">·  AI Systems &amp; AppSec</tspan></text>
+  </g>
+
+  <!-- Crisp 1px Specular Rim + Top Light Bevel -->
+  <rect x="0.5" y="0.5" width="1199" height="235" rx="26" stroke="url(#heroRimStroke)" stroke-width="1"/>
+  <line x1="36" y1="1.5" x2="1164" y2="1.5" stroke="url(#heroTopBevel)" stroke-width="1"/>
+</svg>
