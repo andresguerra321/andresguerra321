@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { GLASS_THEMES, esc, glassDefs, renderGlassSurface } from './glass-tokens.mjs';
 
 const USERNAME = process.env.GITHUB_USERNAME || 'andresguerra321';
 const TOKEN = process.env.GITHUB_TOKEN;
@@ -37,45 +38,6 @@ query($login: String!) {
   }
 }
 `;
-
-const THEMES = {
-  dark: {
-    card: '#121216',
-    tile: '#18181D',
-    border: '#232329',
-    divider: '#1D1D22',
-    text: '#F5F5F7',
-    textMuted: '#A1A1AA',
-    textDim: '#71717A',
-    accentText: '#60A5FA',
-    track: '#1D1D24',
-    swatches: ['#2563EB', '#60A5FA', '#93C5FD', '#D4D4D8', '#71717A', '#3F3F46'],
-  },
-  light: {
-    card: '#F5F5F7',
-    tile: '#FFFFFF',
-    border: '#E5E5EA',
-    divider: '#E5E5EA',
-    text: '#1D1D1F',
-    textMuted: '#515154',
-    textDim: '#86868B',
-    accentText: '#1D4ED8',
-    track: '#E5E5EA',
-    swatches: ['#1D4ED8', '#3B82F6', '#60A5FA', '#3F3F46', '#71717A', '#A1A1AA'],
-  },
-};
-
-const FONT_DISPLAY = `-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI', Helvetica, Arial, sans-serif`;
-const FONT_TEXT = `-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', 'Segoe UI', Helvetica, Arial, sans-serif`;
-const FONT_MONO = `'SF Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace`;
-
-function esc(str) {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
 
 function formatBytes(bytes) {
   if (bytes >= 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
@@ -122,9 +84,10 @@ async function fetchTelemetry() {
 
   const topFive = sorted.slice(0, 5);
   const restBytes = sorted.slice(5).reduce((sum, item) => sum + item.bytes, 0);
-  const languages = restBytes > 0
-    ? [...topFive, { name: 'SQL · Shell · Docker', bytes: restBytes, pct: (restBytes / totalBytes) * 100 }]
-    : topFive;
+  const languages =
+    restBytes > 0
+      ? [...topFive, { name: 'SQL · Shell · Docker', bytes: restBytes, pct: (restBytes / totalBytes) * 100 }]
+      : topFive;
 
   return {
     sinceYear: new Date(user.createdAt).getUTCFullYear(),
@@ -150,12 +113,14 @@ function renderTelemetry(data, t) {
       const col = idx % 2;
       const row = Math.floor(idx / 2);
       const x = 26 + col * 218;
-      const y = 64 + row * 68;
+      const y = 62 + row * 68;
       return `
     <g transform="translate(${x}, ${y})">
-      <rect x="0" y="0" width="204" height="58" rx="12" fill="${t.tile}" stroke="${t.border}" stroke-width="1"/>
-      <text x="14" y="21" class="sans" font-size="11" font-weight="500" fill="${t.textDim}">${esc(k.label)}</text>
-      <text x="14" y="46" class="display" font-size="22" font-weight="600" letter-spacing="-0.5" fill="${t.text}">${esc(k.value)}</text>
+      <rect x="0.5" y="0.5" width="204" height="58" rx="14" fill="${t.tileBase}"/>
+      <rect x="0.5" y="0.5" width="204" height="58" rx="14" fill="url(#telTileBg)" stroke="${t.pillStroke}" stroke-width="1"/>
+      <line x1="16" y1="1.5" x2="188" y2="1.5" stroke="url(#telTopBevel)" stroke-width="1"/>
+      <text x="15" y="21" class="sans" font-size="11" font-weight="500" fill="${t.textMuted}">${esc(k.label)}</text>
+      <text x="15" y="46" class="display" font-size="22" font-weight="600" letter-spacing="-0.5" fill="${t.text}">${esc(k.value)}</text>
     </g>`;
     })
     .join('\n');
@@ -176,72 +141,86 @@ function renderTelemetry(data, t) {
     .map((lang, i) => {
       const col = i % 2;
       const row = Math.floor(i / 2);
-      const x = 26 + col * 322;
-      const y = 92 + row * 38;
+      const x = 26 + col * 324;
+      const y = 92 + row * 39;
       const color = t.swatches[i % t.swatches.length];
       return `
     <g transform="translate(${x}, ${y})">
       <circle cx="5" cy="9.5" r="4" fill="${color}"/>
-      <text x="18" y="13.5" class="sans" font-size="13.5" font-weight="500" fill="${t.text}">${esc(lang.name)}</text>
-      <text x="235" y="13.5" text-anchor="end" class="mono" font-size="12" font-weight="600" fill="${t.accentText}">${lang.pct.toFixed(1)}%</text>
-      <text x="304" y="13.5" text-anchor="end" class="mono" font-size="11" fill="${t.textDim}">${esc(formatBytes(lang.bytes))}</text>
+      <text x="18" y="13.5" class="sans" font-size="13.2" font-weight="500" fill="${t.text}">${esc(lang.name)}</text>
+      <text x="235" y="13.5" text-anchor="end" class="mono" font-size="11.8" font-weight="600" fill="${t.accentText}">${lang.pct.toFixed(1)}%</text>
+      <text x="304" y="13.5" text-anchor="end" class="mono" font-size="11" fill="${t.textMuted}">${esc(formatBytes(lang.bytes))}</text>
       <line x1="0" y1="26" x2="304" y2="26" stroke="${t.divider}" stroke-width="1"/>
     </g>`;
     })
     .join('\n');
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="248" viewBox="0 0 1200 248" fill="none" role="img" aria-label="Telemetría de Ingeniería en GitHub de ${esc(USERNAME)}">
+  const leftCard = renderGlassSurface({
+    x: 0,
+    y: 2,
+    w: 482,
+    h: 244,
+    rx: 20,
+    prefix: 'tel',
+    t,
+    filterShadow: t.mode === 'light',
+    inner: `
+      <text x="26" y="36" class="display" font-size="15.5" font-weight="600" letter-spacing="-0.2" fill="${t.text}">GitHub Activity</text>
+      <text x="456" y="36" text-anchor="end" class="mono" font-size="11.5" font-weight="500" fill="${t.textMuted}">Since ${data.sinceYear}</text>
+      ${kpiCells}
+      <text x="26" y="224" class="sans" font-size="11.5" fill="${t.textMuted}">Live GraphQL snapshot  ·  Updated ${esc(data.updatedDate)}</text>
+    `,
+  });
+
+  const rightCard = renderGlassSurface({
+    x: 504,
+    y: 2,
+    w: 696,
+    h: 244,
+    rx: 20,
+    prefix: 'tel',
+    t,
+    filterShadow: t.mode === 'light',
+    inner: `
+      <text x="26" y="36" class="display" font-size="15.5" font-weight="600" letter-spacing="-0.2" fill="${t.text}">Codebase Distribution</text>
+      <text x="670" y="36" text-anchor="end" class="mono" font-size="11.5" font-weight="500" fill="${t.textMuted}">${data.publicRepos} public repos</text>
+
+      <g transform="translate(26, 58)">
+        <rect x="0" y="0" width="636" height="8" rx="4" fill="${t.track}"/>
+        <g clip-path="url(#barClip)">
+          ${barSegments}
+        </g>
+      </g>
+
+      ${legendRows}
+
+      <text x="26" y="224" class="sans" font-size="11.5" fill="${t.textMuted}">Public non-fork repositories  ·  Restrained vector telemetry</text>
+    `,
+  });
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="256" viewBox="0 0 1200 256" fill="none" role="img" aria-label="Telemetría de Ingeniería en GitHub de ${esc(USERNAME)}">
   <defs>
+    ${glassDefs(t, 'tel')}
     <clipPath id="barClip">
       <rect x="0" y="0" width="636" height="8" rx="4"/>
     </clipPath>
-    <style>
-      .display { font-family: ${FONT_DISPLAY}; }
-      .sans { font-family: ${FONT_TEXT}; }
-      .mono { font-family: ${FONT_MONO}; }
-    </style>
   </defs>
-
-  <!-- Left Panel: GitHub Activity -->
-  <g transform="translate(0, 2)">
-    <rect x="0.5" y="0.5" width="481" height="243" rx="18" fill="${t.card}" stroke="${t.border}" stroke-width="1"/>
-    <text x="26" y="36" class="display" font-size="15" font-weight="600" letter-spacing="-0.2" fill="${t.text}">GitHub Activity</text>
-    <text x="455" y="36" text-anchor="end" class="sans" font-size="12" font-weight="500" fill="${t.textDim}">Since ${data.sinceYear}</text>
-
-    ${kpiCells}
-
-    <text x="26" y="224" class="sans" font-size="11.5" fill="${t.textDim}">Live GraphQL snapshot  ·  Updated ${esc(data.updatedDate)}</text>
-  </g>
-
-  <!-- Right Panel: Language Distribution -->
-  <g transform="translate(504, 2)">
-    <rect x="0.5" y="0.5" width="695" height="243" rx="18" fill="${t.card}" stroke="${t.border}" stroke-width="1"/>
-    <text x="26" y="36" class="display" font-size="15" font-weight="600" letter-spacing="-0.2" fill="${t.text}">Codebase Distribution</text>
-    <text x="668" y="36" text-anchor="end" class="sans" font-size="12" font-weight="500" fill="${t.textDim}">${data.publicRepos} public repositories</text>
-
-    <!-- Segmented Bar -->
-    <g transform="translate(26, 56)">
-      <rect x="0" y="0" width="636" height="8" rx="4" fill="${t.track}"/>
-      <g clip-path="url(#barClip)">
-        ${barSegments}
-      </g>
-    </g>
-
-    ${legendRows}
-
-    <text x="26" y="224" class="sans" font-size="11.5" fill="${t.textDim}">Public non-fork repositories  ·  Native vector telemetry</text>
-  </g>
+  ${leftCard}
+  ${rightCard}
 </svg>`;
 }
 
 const data = await fetchTelemetry();
-const outDir = path.resolve('assets/v3');
+const outDir = path.resolve('assets/v4');
 fs.mkdirSync(outDir, { recursive: true });
-fs.writeFileSync(path.join(outDir, 'telemetry-dark.svg'), renderTelemetry(data, THEMES.dark), 'utf8');
-fs.writeFileSync(path.join(outDir, 'telemetry-light.svg'), renderTelemetry(data, THEMES.light), 'utf8');
-console.log('Generated Apple-minimal telemetry SVGs:', JSON.stringify({
-  totalContributions: data.totalContributions,
-  totalCommits: data.totalCommits,
-  publicRepos: data.publicRepos,
-  activeRepos: data.activeRepos,
-}));
+fs.writeFileSync(path.join(outDir, 'telemetry-dark.svg'), renderTelemetry(data, GLASS_THEMES.dark), 'utf8');
+fs.writeFileSync(path.join(outDir, 'telemetry-light.svg'), renderTelemetry(data, GLASS_THEMES.light), 'utf8');
+console.log(
+  'Generated Apple-Glass telemetry SVGs in ./assets/v4/:',
+  JSON.stringify({
+    totalContributions: data.totalContributions,
+    totalCommits: data.totalCommits,
+    publicRepos: data.publicRepos,
+    activeRepos: data.activeRepos,
+  })
+);

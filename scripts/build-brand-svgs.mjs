@@ -1,262 +1,563 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {
+  GLASS_THEMES,
+  esc,
+  glassDefs,
+  measureLabelWidth,
+  renderGlassSurface,
+  renderPillRow,
+} from './glass-tokens.mjs';
 
-const OUT_DIR = path.resolve('assets/v3');
+const OUT_DIR = path.resolve('assets/v4');
 fs.mkdirSync(OUT_DIR, { recursive: true });
 
-const sculpturePath = path.resolve('scripts/centerpiece-3d.jpg');
-const sculptureB64 = fs.readFileSync(sculpturePath).toString('base64');
-
-const THEMES = {
-  dark: {
-    surface: '#060709',
-    card: '#111115',
-    chipBg: '#121218',
-    border: '#222229',
-    chipBorder: '#2C2C36',
-    divider: '#1D1D24',
-    text: '#F5F5F7',
-    textMuted: '#A1A1AA',
-    textDim: '#71717A',
-    accent: '#2563EB',
-    accentText: '#60A5FA',
-    pillBg: '#111116',
-    pillBorder: '#25252E',
-  },
-  light: {
-    surface: '#FFFFFF',
-    card: '#F5F5F7',
-    chipBg: '#121218',
-    border: '#E5E5EA',
-    chipBorder: '#2C2C36',
-    divider: '#E5E5EA',
-    text: '#1D1D1F',
-    textMuted: '#515154',
-    textDim: '#86868B',
-    accent: '#1D4ED8',
-    accentText: '#1D4ED8',
-    pillBg: '#F5F5F7',
-    pillBorder: '#D2D2D7',
-  },
+const ICONS = {
+  globe: (c) =>
+    `<circle cx="9" cy="9" r="6.8" stroke="${c}" stroke-width="1.5"/><ellipse cx="9" cy="9" rx="3" ry="6.8" stroke="${c}" stroke-width="1.3"/><line x1="2.4" y1="9" x2="15.6" y2="9" stroke="${c}" stroke-width="1.3"/>`,
+  linkedin: (c) =>
+    `<rect x="2.5" y="2.5" width="13" height="13" rx="3" stroke="${c}" stroke-width="1.5"/><circle cx="6.2" cy="6.2" r="0.9" fill="${c}"/><path d="M6.2 8.4V12.5M9.2 12.5V8.4M9.2 9.8C9.2 8.7 12.2 8.4 12.2 10.2V12.5" stroke="${c}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`,
+  mail: (c) =>
+    `<rect x="2.2" y="3.8" width="13.6" height="10.4" rx="2.2" stroke="${c}" stroke-width="1.5"/><path d="M3 5.2L9 9.6L15 5.2" stroke="${c}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`,
+  briefcase: (c) =>
+    `<rect x="2.4" y="5.4" width="13.2" height="9.4" rx="2.2" stroke="${c}" stroke-width="1.5"/><path d="M6.5 5.4V4C6.5 3.3 7 2.8 7.7 2.8H10.3C11 2.8 11.5 3.3 11.5 4V5.4" stroke="${c}" stroke-width="1.5"/>`,
+  message: (c) =>
+    `<path d="M9 2.6C5.3 2.6 2.5 5.1 2.5 8.2C2.5 9.6 3.1 10.9 4.1 11.9L3.3 14.8L6.4 13.7C7.2 14 8.1 14.2 9 14.2C12.7 14.2 15.5 11.5 15.5 8.2C15.5 5.1 12.7 2.6 9 2.6Z" stroke="${c}" stroke-width="1.5" stroke-linejoin="round"/>`,
+  neural: (c) =>
+    `<circle cx="9" cy="4.2" r="1.7" stroke="${c}" stroke-width="1.4"/><circle cx="4.3" cy="12.5" r="1.7" stroke="${c}" stroke-width="1.4"/><circle cx="13.7" cy="12.5" r="1.7" stroke="${c}" stroke-width="1.4"/><path d="M8.1 5.7L5.2 11M9.9 5.7L12.8 11M6 12.5H12" stroke="${c}" stroke-width="1.4" stroke-linecap="round"/>`,
+  layers: (c) =>
+    `<path d="M9 2.8L15.4 6.1L9 9.4L2.6 6.1L9 2.8Z" stroke="${c}" stroke-width="1.5" stroke-linejoin="round"/><path d="M2.6 9.3L9 12.6L15.4 9.3M2.6 12.4L9 15.7L15.4 12.4" stroke="${c}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`,
+  shield: (c) =>
+    `<path d="M9 2.5L14.5 4.8V8.8C14.5 12.1 12.1 14.6 9 15.6C5.9 14.6 3.5 12.1 3.5 8.8V4.8L9 2.5Z" stroke="${c}" stroke-width="1.5" stroke-linejoin="round"/><path d="M6.7 9.1L8.3 10.7L11.6 7.4" stroke="${c}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`,
+  doc: (c) =>
+    `<path d="M5 2.6H10.5L13.8 5.9V14.4C13.8 15 13.3 15.4 12.7 15.4H5C4.4 15.4 4 15 4 14.4V3.6C4 3 4.4 2.6 5 2.6Z" stroke="${c}" stroke-width="1.5" stroke-linejoin="round"/><path d="M10.2 2.8V6H13.5M6.3 9.4H11.5M6.3 12H9.8" stroke="${c}" stroke-width="1.4" stroke-linecap="round"/>`,
+  eye: (c) =>
+    `<path d="M2.4 9C3.9 5.9 6.3 4.4 9 4.4C11.7 4.4 14.1 5.9 15.6 9C14.1 12.1 11.7 13.6 9 13.6C6.3 13.6 3.9 12.1 2.4 9Z" stroke="${c}" stroke-width="1.5" stroke-linejoin="round"/><circle cx="9" cy="9" r="2.2" stroke="${c}" stroke-width="1.5"/>`,
+  database: (c) =>
+    `<ellipse cx="9" cy="4.8" rx="5.5" ry="2.1" stroke="${c}" stroke-width="1.5"/><path d="M3.5 4.8V13.2C3.5 14.4 5.9 15.3 9 15.3C12.1 15.3 14.5 14.4 14.5 13.2V4.8M3.5 9C3.5 10.2 5.9 11.1 9 11.1C12.1 11.1 14.5 10.2 14.5 9" stroke="${c}" stroke-width="1.5"/>`,
+  terminal: (c) =>
+    `<rect x="2.5" y="3.2" width="13" height="11.6" rx="2.5" stroke="${c}" stroke-width="1.5"/><path d="M5.6 7.2L7.8 9.1L5.6 11M9.1 11H12.2" stroke="${c}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`,
 };
 
-const FONT_DISPLAY = `-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI', Helvetica, Arial, sans-serif`;
-const FONT_TEXT = `-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', 'Segoe UI', Helvetica, Arial, sans-serif`;
-const FONT_MONO = `'SF Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace`;
+function renderIconBadge(x, y, iconName, t, { size = 34, accent = true } = {}) {
+  const strokeColor = accent ? t.accentText : t.text;
+  const offset = (size - 18) / 2;
+  return `
+  <g transform="translate(${x}, ${y})">
+    <rect x="0.5" y="0.5" width="${size - 1}" height="${size - 1}" rx="10" fill="${t.iconWellFill}" stroke="${t.iconWellStroke}" stroke-width="1"/>
+    <g transform="translate(${offset}, ${offset})">
+      ${ICONS[iconName](strokeColor)}
+    </g>
+  </g>`;
+}
 
-function renderHero(mode) {
-  // Showcase canvas remains studio #060709 so the 3D obsidian & titanium sculpture integrates seamlessly,
-  // using crisp Apple Pro framing in both dark and light GitHub themes.
-  const outerBorder = mode === 'dark' ? '#23232B' : '#D2D2D7';
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="336" viewBox="0 0 1200 336" fill="none" role="img" aria-label="Andrés Felipe Guerra — Fullstack Engineer &amp; AI Systems">
+function renderHero(t) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="318" viewBox="0 0 1200 318" fill="none" role="img" aria-label="Andrés Felipe Guerra — Fullstack Software Engineer">
   <defs>
-    <radialGradient id="sculptMaskGrad" cx="50%" cy="50%" r="50%">
-      <stop offset="56%" stop-color="#FFFFFF" stop-opacity="1"/>
-      <stop offset="86%" stop-color="#FFFFFF" stop-opacity="0.72"/>
-      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
-    </radialGradient>
-    <mask id="sculptMask">
-      <rect x="665" y="-12" width="490" height="366" fill="url(#sculptMaskGrad)"/>
-    </mask>
-    <clipPath id="heroFrame">
-      <rect x="0.5" y="0.5" width="1199" height="335" rx="24"/>
+    ${glassDefs(t, 'hero')}
+    <clipPath id="heroOuterClip">
+      <rect x="0.5" y="0.5" width="1199" height="317" rx="26"/>
     </clipPath>
     <style>
-      .display { font-family: ${FONT_DISPLAY}; }
-      .sans { font-family: ${FONT_TEXT}; }
-      .mono { font-family: ${FONT_MONO}; }
-      @keyframes breathe {
+      @keyframes livePulse {
         0%, 100% { opacity: 1; }
         50% { opacity: 0.42; }
       }
-      @keyframes levitate {
+      @keyframes softFloat {
         0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-7px); }
+        50% { transform: translateY(-3px); }
       }
-      @keyframes floatA {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-5px); }
-      }
-      @keyframes floatB {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(5px); }
-      }
-      .liveDot { animation: breathe 3.2s ease-in-out infinite; }
-      .sculptFloat { animation: levitate 7s ease-in-out infinite; }
-      .chipFloatA { animation: floatA 5.8s ease-in-out infinite; }
-      .chipFloatB { animation: floatB 6.4s ease-in-out infinite; }
+      .liveDot { animation: livePulse 3.6s ease-in-out infinite; }
+      .floatGlass { animation: softFloat 6.5s ease-in-out infinite; }
     </style>
   </defs>
 
-  <g clip-path="url(#heroFrame)">
-    <!-- Match corner #060709 of studio 3D render cleanly -->
-    <rect x="0" y="0" width="1200" height="336" fill="#060709"/>
+  <g clip-path="url(#heroOuterClip)">
+    <rect x="0" y="0" width="1200" height="318" fill="${t.canvas}"/>
 
-    <!-- Subtle orbital guide arc behind 3D prism -->
-    <g transform="translate(918, 168)">
-      <ellipse cx="0" cy="0" rx="210" ry="96" transform="rotate(-18)" stroke="#1C2230" stroke-width="1" stroke-dasharray="5 9" opacity="0.7"/>
-      <circle cx="0" cy="0" r="148" stroke="#2563EB" stroke-opacity="0.22" stroke-width="1" stroke-dasharray="70 190">
-        <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="40s" repeatCount="indefinite"/>
-      </circle>
+    <!-- Calm atmospheric ambient light behind translucent stacked glass cards -->
+    <g filter="url(#heroSoftBlur)" opacity="${t.ambientOpacity}">
+      <circle cx="956" cy="112" r="142" fill="${t.ambientPrimary}"/>
+      <circle cx="842" cy="222" r="118" fill="${t.ambientSecondary}"/>
     </g>
 
-    <!-- Studio 3D Apple Titanium & Royal-Blue Centerpiece -->
-    <g class="sculptFloat">
-      <image href="data:image/jpeg;base64,${sculptureB64}" x="665" y="-12" width="490" height="366" preserveAspectRatio="xMidYMid meet" mask="url(#sculptMask)"/>
-    </g>
-
-    <!-- Floating Apple Callout Chip A -->
-    <g transform="translate(652, 46)">
-      <g class="chipFloatA">
-        <rect x="0" y="0" width="174" height="48" rx="14" fill="#111116" fill-opacity="0.94" stroke="#282832" stroke-width="1"/>
-        <circle cx="17" cy="18" r="3.5" fill="#60A5FA" class="liveDot"/>
-        <text x="29" y="21.5" class="sans" font-size="12" font-weight="600" fill="#F5F5F7">AI &amp; Hybrid RAG</text>
-        <text x="17" y="38" class="mono" font-size="10" font-weight="500" fill="#8E8E98">pgvector · FastAPI</text>
-      </g>
-    </g>
-
-    <!-- Floating Apple Callout Chip B -->
-    <g transform="translate(996, 240)">
-      <g class="chipFloatB">
-        <rect x="0" y="0" width="170" height="54" rx="14" fill="#111116" fill-opacity="0.94" stroke="#282832" stroke-width="1"/>
-        <text x="16" y="25" class="display" font-size="17" font-weight="700" fill="#F5F5F7">793</text>
-        <text x="53" y="24" class="sans" font-size="11" font-weight="500" fill="#A1A1AA">Contribs</text>
-        <text x="16" y="42" class="mono" font-size="10" font-weight="500" fill="#60A5FA">37 Public Repos</text>
-        <!-- Crisp 4-bar Apple activity micro sparkline -->
-        <rect x="128" y="21" width="4" height="10" rx="2" fill="#1E3A8A"/>
-        <rect x="135" y="16" width="4" height="15" rx="2" fill="#2563EB"/>
-        <rect x="142" y="19" width="4" height="12" rx="2" fill="#3B82F6"/>
-        <rect x="149" y="12" width="4" height="19" rx="2" fill="#60A5FA"/>
-      </g>
+    <!-- Subtle hairline grid texture on the right canvas -->
+    <g opacity="${t.mode === 'dark' ? '0.045' : '0.04'}">
+      <line x1="720" y1="0" x2="720" y2="318" stroke="${t.text}" stroke-width="1"/>
+      <line x1="940" y1="0" x2="940" y2="318" stroke="${t.text}" stroke-width="1"/>
+      <line x1="680" y1="108" x2="1200" y2="108" stroke="${t.text}" stroke-width="1"/>
+      <line x1="680" y1="212" x2="1200" y2="212" stroke="${t.text}" stroke-width="1"/>
     </g>
 
     <!-- Left Editorial Column -->
-    <g transform="translate(54, 44)">
-      <!-- Availability Pill -->
-      <rect x="0" y="0" width="224" height="28" rx="14" fill="#111116" stroke="#262630" stroke-width="1"/>
-      <circle cx="15" cy="14" r="3.5" fill="#60A5FA" class="liveDot"/>
-      <text x="27" y="18" class="sans" font-size="12" font-weight="500" fill="#A1A1AA">AG Engineering  ·  Colombia</text>
+    <g transform="translate(52, 38)">
+      <!-- Location & Practice Capsule -->
+      <rect x="0.5" y="0.5" width="270" height="29" rx="14.5" fill="${t.tileBase}" stroke="url(#heroRimStroke)" stroke-width="1"/>
+      <circle cx="16" cy="15" r="3.5" fill="${t.statusOk}" class="liveDot"/>
+      <text x="29" y="19" class="sans" font-size="11.8" font-weight="500" fill="${t.textSecondary}">Bucaramanga, CO  ·  AG Engineering</text>
 
       <!-- Display Name -->
-      <text x="0" y="88" class="display" font-size="50" font-weight="600" letter-spacing="-1.6" fill="#F5F5F7">Andrés Felipe Guerra</text>
+      <text x="0" y="92" class="display" font-size="44" font-weight="600" letter-spacing="-1.45" fill="${t.text}">Andrés Felipe Guerra</text>
 
-      <!-- Keynote Statement -->
-      <text x="0" y="126" class="display" font-size="21" font-weight="500" letter-spacing="-0.3" fill="#E4E4E7">Fullstack Engineer.  <tspan fill="#60A5FA">AI Systems &amp; Security.</tspan></text>
+      <!-- Role Line -->
+      <text x="0" y="129" class="display" font-size="20" font-weight="500" letter-spacing="-0.35" fill="${t.text}">Fullstack Software Engineer  <tspan fill="${t.accentText}">·  AI Systems &amp; AppSec</tspan></text>
 
-      <!-- Supporting Subcopy -->
-      <text x="0" y="160" class="sans" font-size="14.5" font-weight="400" fill="#8E8E98">Architecting RAG intelligence, Hexagonal backends &amp; forensic tooling.</text>
+      <!-- Editorial Subcopy -->
+      <text x="0" y="162" class="sans" font-size="14.5" font-weight="400" fill="${t.textMuted}">Diseño arquitecturas hexagonales, motores RAG híbridos y tooling defensivo.</text>
 
-      <!-- Bottom Apple Spec Dock -->
-      <g transform="translate(0, 194)">
-        <rect x="0" y="0" width="600" height="52" rx="15" fill="#101014" stroke="#22222A" stroke-width="1"/>
+      <!-- Frosted Bottom Metadata Dock -->
+      <g transform="translate(0, 188)">
+        <rect x="0.5" y="0.5" width="618" height="58" rx="16" fill="${t.panelBase}" stroke="url(#heroRimStroke)" stroke-width="1"/>
+        <rect x="0.5" y="0.5" width="618" height="58" rx="16" fill="url(#heroShellBg)"/>
+        <line x1="18" y1="1.5" x2="600" y2="1.5" stroke="url(#heroTopBevel)" stroke-width="1"/>
 
-        <text x="18" y="21" class="sans" font-size="10.5" font-weight="500" fill="#71717A">Core Stack</text>
-        <text x="18" y="39" class="sans" font-size="13" font-weight="600" fill="#F5F5F7">Python · Java · React</text>
+        <text x="20" y="23" class="sans" font-size="10.8" font-weight="500" fill="${t.textMuted}">Core Stack</text>
+        <text x="20" y="42" class="sans" font-size="13.2" font-weight="600" fill="${t.text}">Python · Java · React</text>
 
-        <line x1="184" y1="11" x2="184" y2="41" stroke="#22222A" stroke-width="1"/>
+        <line x1="196" y1="13" x2="196" y2="45" stroke="${t.divider}" stroke-width="1"/>
 
-        <text x="202" y="21" class="sans" font-size="10.5" font-weight="500" fill="#71717A">Architecture</text>
-        <text x="202" y="39" class="sans" font-size="13" font-weight="600" fill="#F5F5F7">DDD · RAG · Docker</text>
+        <text x="216" y="23" class="sans" font-size="10.8" font-weight="500" fill="${t.textMuted}">Arquitectura</text>
+        <text x="216" y="42" class="sans" font-size="13.2" font-weight="600" fill="${t.text}">DDD · pgvector · Docker</text>
 
-        <line x1="354" y1="11" x2="354" y2="41" stroke="#22222A" stroke-width="1"/>
+        <line x1="404" y1="13" x2="404" y2="45" stroke="${t.divider}" stroke-width="1"/>
 
-        <text x="372" y="21" class="sans" font-size="10.5" font-weight="500" fill="#71717A">Portfolio</text>
-        <text x="372" y="39" class="sans" font-size="12.5" font-weight="600" fill="#60A5FA">portfolio.agengineering.workers.dev</text>
+        <text x="424" y="23" class="sans" font-size="10.8" font-weight="500" fill="${t.textMuted}">Portfolio</text>
+        <text x="424" y="42" class="sans" font-size="13" font-weight="600" fill="${t.accentText}">agengineering.workers.dev</text>
+      </g>
+    </g>
+
+    <!-- Right Spatial Layered Frosted Glass Stack -->
+    <g transform="translate(718, 28)">
+      <!-- Back Layer (Recessed Context) -->
+      <g transform="translate(56, 0)" opacity="0.92">
+        <rect x="0.5" y="0.5" width="372" height="84" rx="18" fill="${t.tileBase}" filter="url(#heroCardShadow)"/>
+        <rect x="0.5" y="0.5" width="372" height="84" rx="18" fill="url(#heroTileBg)" stroke="url(#heroRimStroke)" stroke-width="1"/>
+        <line x1="20" y1="1.5" x2="352" y2="1.5" stroke="url(#heroTopBevel)" stroke-width="1"/>
+        <text x="20" y="27" class="sans" font-size="12.5" font-weight="600" fill="${t.text}">AI Systems &amp; Hybrid RAG</text>
+        <text x="352" y="27" text-anchor="end" class="mono" font-size="11" font-weight="600" fill="${t.accentText}">RRF + Vec</text>
+        <text x="20" y="48" class="sans" font-size="11.8" fill="${t.textMuted}">LangChain · Pydantic · pgvector 768d</text>
+      </g>
+
+      <!-- Middle Elevated Frosted Layer (Spotlight Feature) -->
+      <g class="floatGlass">
+        ${renderGlassSurface({
+          x: 10,
+          y: 72,
+          w: 416,
+          h: 124,
+          rx: 20,
+          prefix: 'hero',
+          t,
+          filterShadow: true,
+          inner: `
+            ${renderIconBadge(20, 20, 'shield', t, { size: 34, accent: true })}
+            <text x="66" y="35" class="display" font-size="15.5" font-weight="600" letter-spacing="-0.2" fill="${t.text}">OMEGA Platform</text>
+            <text x="66" y="51" class="sans" font-size="11.8" fill="${t.textMuted}">Threat Intelligence &amp; Forensics</text>
+            <rect x="328" y="21" width="68" height="23" rx="11.5" fill="${t.pillAccentFill}" stroke="${t.pillAccentStroke}" stroke-width="1"/>
+            <text x="362" y="36" text-anchor="middle" class="mono" font-size="10.8" font-weight="600" fill="${t.accentText}">v1.3.1</text>
+            <line x1="20" y1="69" x2="396" y2="69" stroke="${t.divider}" stroke-width="1"/>
+            ${renderPillRow(['Java 21', 'Spring Boot 3', 'FastAPI', 'Electron'], t, { startX: 20, y: 83, height: 26, fontSize: 11, gap: 8 })}
+          `,
+        })}
+      </g>
+
+      <!-- Front Compact Frosted Pill Layer -->
+      <g transform="translate(66, 208)">
+        <rect x="0.5" y="0.5" width="364" height="58" rx="16" fill="${t.tileBase}" filter="url(#heroCardShadow)"/>
+        <rect x="0.5" y="0.5" width="364" height="58" rx="16" fill="url(#heroTileBg)" stroke="url(#heroRimStroke)" stroke-width="1"/>
+        <line x1="18" y1="1.5" x2="346" y2="1.5" stroke="url(#heroTopBevel)" stroke-width="1"/>
+        ${renderIconBadge(14, 12, 'layers', t, { size: 34, accent: false })}
+        <text x="60" y="27" class="sans" font-size="12.5" font-weight="600" fill="${t.text}">Backend · Cloud · Automation</text>
+        <text x="60" y="44" class="sans" font-size="11.5" fill="${t.textMuted}">Hexagonal DDD · PostgreSQL 16 · Baileys · n8n</text>
       </g>
     </g>
   </g>
 
-  <rect x="0.5" y="0.5" width="1199" height="335" rx="24" stroke="${outerBorder}" stroke-width="1"/>
+  <rect x="0.5" y="0.5" width="1199" height="317" rx="26" stroke="url(#heroRimStroke)" stroke-width="1"/>
+  <line x1="30" y1="1.5" x2="1170" y2="1.5" stroke="url(#heroTopBevel)" stroke-width="1"/>
 </svg>`;
 }
 
+function renderActionButtons(t) {
+  const buttons = [
+    { slug: 'portfolio', label: 'Portfolio', icon: 'globe', width: 124, primary: true },
+    { slug: 'linkedin', label: 'LinkedIn', icon: 'linkedin', width: 120, primary: false },
+    { slug: 'email', label: 'Email', icon: 'mail', width: 100, primary: false },
+    { slug: 'fiverr', label: 'Fiverr', icon: 'briefcase', width: 102, primary: false },
+    { slug: 'whatsapp', label: 'WhatsApp', icon: 'message', width: 132, primary: false },
+  ];
+
+  const out = {};
+  for (const btn of buttons) {
+    const bgFill = btn.primary ? t.pillAccentFill : t.panelBase;
+    const strokeRef = btn.primary ? t.pillAccentStroke : `url(#btnRimStroke)`;
+    const iconColor = btn.primary ? t.accentText : t.textSecondary;
+    const textColor = btn.primary ? t.accentText : t.text;
+    out[btn.slug] = `<svg xmlns="http://www.w3.org/2000/svg" width="${btn.width}" height="38" viewBox="0 0 ${btn.width} 38" fill="none" role="img" aria-label="${esc(btn.label)}">
+  <defs>
+    ${glassDefs(t, 'btn')}
+  </defs>
+  <rect x="0.5" y="0.5" width="${btn.width - 1}" height="37" rx="19" fill="${bgFill}"/>
+  ${btn.primary ? '' : `<rect x="0.5" y="0.5" width="${btn.width - 1}" height="37" rx="19" fill="url(#btnShellBg)"/>`}
+  <rect x="0.5" y="0.5" width="${btn.width - 1}" height="37" rx="19" stroke="${strokeRef}" stroke-width="1"/>
+  <line x1="18" y1="1.5" x2="${btn.width - 18}" y2="1.5" stroke="url(#btnTopBevel)" stroke-width="1"/>
+  <g transform="translate(15, 10)">
+    ${ICONS[btn.icon](iconColor)}
+  </g>
+  <text x="40" y="23.5" class="sans" font-size="13" font-weight="600" fill="${textColor}">${esc(btn.label)}</text>
+</svg>`;
+  }
+  return out;
+}
+
 function renderPillars(t) {
-  const cards = [
+  const pillars = [
     {
-      idx: '01',
-      title: 'AI Systems &amp; RAG',
+      icon: 'neural',
+      title: 'AI Systems & RAG',
       lines: [
-        'Hybrid RRF search over pgvector',
-        'Structured LLM flows with Pydantic',
-        'Multi-agent Computer Vision pipelines',
+        'Búsqueda híbrida RRF sobre pgvector',
+        'Flujos LLM tipados con Pydantic',
+        'Pipelines multi-agente con visión',
       ],
-      tags: 'Python · LangChain · OpenAI · Gemini',
+      tags: ['Python', 'LangChain', 'OpenAI', 'Gemini'],
     },
     {
-      idx: '02',
+      icon: 'layers',
       title: 'Backend Architecture',
       lines: [
-        'Hexagonal &amp; Domain-Driven Design',
-        'Stateless JWT, RBAC &amp; OpenAPI APIs',
-        'Multi-tenant SQL schemas &amp; triggers',
+        'Arquitectura Hexagonal y DDD modular',
+        'APIs stateless con JWT, RBAC y OpenAPI',
+        'Esquemas multi-tenant en PostgreSQL',
       ],
-      tags: 'Java 17 · Spring Boot · FastAPI · PostgreSQL',
+      tags: ['Java 21', 'Spring Boot 3', 'FastAPI'],
     },
     {
-      idx: '03',
-      title: 'Security &amp; Automation',
+      icon: 'shield',
+      title: 'Security & Automation',
       lines: [
-        'CTI correlation &amp; endpoint forensics',
-        'Autonomous WhatsApp &amp; n8n workflows',
-        'Containerized Docker &amp; Edge delivery',
+        'Correlación CTI y triaje forense MVT',
+        'Agentes en WhatsApp y flujos n8n',
+        'Entrega en Docker, Electron y Edge',
       ],
-      tags: 'OMEGA · MVT · Node.js · Baileys · Docker',
+      tags: ['OMEGA', 'Node.js', 'Baileys', 'Docker'],
     },
   ];
 
-  const panels = cards
-    .map((c, i) => {
+  const panels = pillars
+    .map((p, i) => {
       const x = i * 408;
-      return `
-  <g transform="translate(${x}, 2)">
-    <rect x="0.5" y="0.5" width="383" height="206" rx="18" fill="${t.card}" stroke="${t.border}" stroke-width="1"/>
-    <text x="26" y="34" class="mono" font-size="11.5" font-weight="600" letter-spacing="1" fill="${t.accentText}">${c.idx}</text>
-    <text x="26" y="64" class="display" font-size="20" font-weight="600" letter-spacing="-0.45" fill="${t.text}">${c.title}</text>
+      const linesSvg = p.lines
+        .map(
+          (line, idx) => `
+      <circle cx="28" cy="${88 + idx * 24}" r="2.2" fill="${t.accentText}"/>
+      <text x="40" y="${92 + idx * 24}" class="sans" font-size="13.2" font-weight="400" fill="${t.textSecondary}">${esc(line)}</text>`
+        )
+        .join('');
 
-    <circle cx="30" cy="94" r="2.2" fill="${t.accentText}"/>
-    <text x="42" y="98" class="sans" font-size="13.8" font-weight="400" fill="${t.textMuted}">${c.lines[0]}</text>
-
-    <circle cx="30" cy="119" r="2.2" fill="${t.accentText}"/>
-    <text x="42" y="123" class="sans" font-size="13.8" font-weight="400" fill="${t.textMuted}">${c.lines[1]}</text>
-
-    <circle cx="30" cy="144" r="2.2" fill="${t.accentText}"/>
-    <text x="42" y="148" class="sans" font-size="13.8" font-weight="400" fill="${t.textMuted}">${c.lines[2]}</text>
-
-    <line x1="26" y1="169" x2="357" y2="169" stroke="${t.divider}" stroke-width="1"/>
-    <text x="26" y="191" class="sans" font-size="12" font-weight="500" fill="${t.textDim}">${c.tags}</text>
-  </g>`;
+      return renderGlassSurface({
+        x,
+        y: 2,
+        w: 384,
+        h: 210,
+        rx: 20,
+        prefix: 'pil',
+        t,
+        filterShadow: t.mode === 'light',
+        inner: `
+          ${renderIconBadge(24, 22, p.icon, t, { size: 34, accent: true })}
+          <text x="70" y="45" class="display" font-size="17.5" font-weight="600" letter-spacing="-0.3" fill="${t.text}">${esc(p.title)}</text>
+          ${linesSvg}
+          <line x1="24" y1="158" x2="360" y2="158" stroke="${t.divider}" stroke-width="1"/>
+          ${renderPillRow(p.tags, t, { startX: 24, y: 170, height: 24, fontSize: 10.8, gap: 7 })}
+        `,
+      });
     })
     .join('\n');
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="212" viewBox="0 0 1200 212" fill="none" role="img" aria-label="Áreas de Especialización Técnica">
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="222" viewBox="0 0 1200 222" fill="none" role="img" aria-label="Especialidades de Ingeniería">
   <defs>
-    <style>
-      .display { font-family: ${FONT_DISPLAY}; }
-      .sans { font-family: ${FONT_TEXT}; }
-      .mono { font-family: ${FONT_MONO}; }
-    </style>
+    ${glassDefs(t, 'pil')}
   </defs>
   ${panels}
 </svg>`;
 }
 
-function renderFooter(t) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="60" viewBox="0 0 1200 60" fill="none" role="img" aria-label="AG Engineering">
+const FEATURED_PROJECTS = [
+  {
+    slug: 'omega',
+    icon: 'shield',
+    title: 'OMEGA',
+    subtitle: 'Threat Intelligence & Forense',
+    badge: 'v1.3.1 · Security',
+    line1: 'Plataforma Zero-Retention con RAG híbrido (pgvector + RRF) para',
+    line2: 'correlación CTI, triaje forense (MVT/iOS/ADB) y auditoría OSINT.',
+    tags: ['Java 21', 'Spring Boot 3', 'FastAPI', 'pgvector', 'React 19', 'Electron'],
+  },
+  {
+    slug: 'toolrent',
+    icon: 'layers',
+    title: 'ToolRent',
+    subtitle: 'SaaS Industrial (DDD)',
+    badge: 'Hexagonal · 8 Módulos',
+    line1: 'Sistema empresarial de renta de maquinaria con Domain-Driven Design,',
+    line2: 'PostgreSQL 16 en Cuarta Forma Normal (4FN), Flyway, JWT RBAC y SPA.',
+    tags: ['Java 17', 'Spring Boot 3', 'PostgreSQL 16', 'Flyway', 'JWT', 'Vite'],
+  },
+  {
+    slug: 'cv',
+    icon: 'doc',
+    title: 'CV Intelligence',
+    subtitle: 'Analizador de Hojas de Vida IA',
+    badge: 'LLM · Pydantic',
+    line1: 'Motor de evaluación automatizada que contrasta currículos PDF frente',
+    line2: 'a vacantes con extracción tipada en Pydantic y pipelines LangChain LCEL.',
+    tags: ['Python 3.12', 'LangChain', 'Pydantic', 'OpenAI', 'Gemini', 'Streamlit'],
+  },
+  {
+    slug: 'guardian',
+    icon: 'eye',
+    title: 'GUARDIAN',
+    subtitle: 'Seguridad Vial Multi-Agente',
+    badge: 'Computer Vision',
+    line1: 'Sistema predictivo para transporte terrestre con visión computacional',
+    line2: 'y tres agentes (Copiloto · Centinela · Oráculo) sobre Voxel51 FiftyOne.',
+    tags: ['Python', 'Voxel51 FiftyOne', 'Gemini AI', 'Multi-Agent'],
+  },
+  {
+    slug: 'wabot',
+    icon: 'message',
+    title: 'WA-Bot',
+    subtitle: 'Agente Conversacional WhatsApp',
+    badge: 'Self-Hosted 24/7',
+    line1: 'Asistente IA para agendamiento y soporte continuo con memoria de',
+    line2: 'sesión, botones interactivos y Groq/LLaMA sin tarifa por mensaje.',
+    tags: ['Node.js', 'Baileys', 'Groq', 'LLaMA', 'Docker'],
+  },
+  {
+    slug: 'postgres',
+    icon: 'database',
+    title: 'SST & PESV Multi-Tenant DB',
+    subtitle: 'Arquitectura Relacional & Auditoría',
+    badge: 'PostgreSQL · PHVA',
+    line1: 'Base de datos aislada por tenant en PostgreSQL para gestión normativa',
+    line2: 'SG-SST y PESV con concurrencia segura, triggers y vistas materializadas.',
+    tags: ['PostgreSQL', 'PL/pgSQL', 'Multi-Tenant', 'Docker'],
+  },
+];
+
+function renderProjectCard(proj, t) {
+  const badgeW = measureLabelWidth(proj.badge, 10.8, true) + 22;
+  const badgeX = 590 - 24 - badgeW;
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="590" height="218" viewBox="0 0 590 218" fill="none" role="img" aria-label="${esc(proj.title)} — ${esc(proj.subtitle)}">
   <defs>
-    <style>
-      .sans { font-family: ${FONT_TEXT}; }
-    </style>
+    ${glassDefs(t, 'proj')}
   </defs>
-  <rect x="0.5" y="0.5" width="1199" height="59" rx="16" fill="${t.card}" stroke="${t.border}" stroke-width="1"/>
-  <text x="28" y="34.5" class="sans" font-size="13" font-weight="600" letter-spacing="-0.1" fill="${t.text}">Andrés Felipe Guerra  <tspan font-weight="400" fill="${t.textDim}">·  AG Engineering</tspan></text>
-  <text x="1172" y="34.5" text-anchor="end" class="sans" font-size="12.5" font-weight="500" fill="${t.accentText}">portfolio.agengineering.workers.dev</text>
+  ${renderGlassSurface({
+    x: 0,
+    y: 2,
+    w: 590,
+    h: 210,
+    rx: 20,
+    prefix: 'proj',
+    t,
+    filterShadow: t.mode === 'light',
+    inner: `
+      ${renderIconBadge(24, 22, proj.icon, t, { size: 38, accent: true })}
+      <text x="74" y="39" class="display" font-size="18.5" font-weight="600" letter-spacing="-0.35" fill="${t.text}">${esc(proj.title)}</text>
+      <text x="74" y="56" class="sans" font-size="12.2" font-weight="500" fill="${t.textMuted}">${esc(proj.subtitle)}</text>
+
+      <!-- Top-Right Frosted Status Badge -->
+      <rect x="${badgeX}" y="23" width="${badgeW}" height="24" rx="12" fill="${t.pillAccentFill}" stroke="${t.pillAccentStroke}" stroke-width="1"/>
+      <text x="${badgeX + badgeW / 2}" y="38.5" text-anchor="middle" class="mono" font-size="10.5" font-weight="600" fill="${t.accentText}">${esc(proj.badge)}</text>
+
+      <!-- Description -->
+      <text x="24" y="96" class="sans" font-size="13.5" font-weight="400" fill="${t.textSecondary}">${esc(proj.line1)}</text>
+      <text x="24" y="117" class="sans" font-size="13.5" font-weight="400" fill="${t.textSecondary}">${esc(proj.line2)}</text>
+
+      <!-- Divider & Stack Pills -->
+      <line x1="24" y1="144" x2="566" y2="144" stroke="${t.divider}" stroke-width="1"/>
+      ${renderPillRow(proj.tags, t, { startX: 24, y: 159, height: 26, fontSize: 11, gap: 7 })}
+    `,
+  })}
 </svg>`;
 }
 
-for (const [name, tokens] of Object.entries(THEMES)) {
-  fs.writeFileSync(path.join(OUT_DIR, `hero-${name}.svg`), renderHero(name), 'utf8');
-  fs.writeFileSync(path.join(OUT_DIR, `pillars-${name}.svg`), renderPillars(tokens), 'utf8');
-  fs.writeFileSync(path.join(OUT_DIR, `footer-${name}.svg`), renderFooter(tokens), 'utf8');
+const MINI_PROJECTS = [
+  {
+    slug: 'tribuna',
+    icon: 'terminal',
+    title: 'Tribuna Global',
+    summary: 'Análisis estructurado de sentimiento y suite anti Prompt Injection.',
+    stack: 'Python · LangChain · Streamlit · Groq',
+  },
+  {
+    slug: 'deliverybot',
+    icon: 'message',
+    title: 'DeliveryBot',
+    summary: 'Orquestación automatizada de pedidos institucionales en tiempo real.',
+    stack: 'n8n · Telegram Bot API · Python · Google Sheets',
+  },
+  {
+    slug: 'hexagonal',
+    icon: 'layers',
+    title: 'Hexagonal Demo App',
+    summary: 'Puertos, adaptadores, Abstract Factory y principios SOLID en Java.',
+    stack: 'Java · JDBC · PostgreSQL · MySQL',
+  },
+  {
+    slug: 'portfolio',
+    icon: 'globe',
+    title: 'AG Engineering Portfolio',
+    summary: 'Sitio web oficial optimizado sobre infraestructura edge global.',
+    stack: 'Cloudflare Workers · HTML · CSS · JavaScript',
+  },
+];
+
+function renderMiniCard(item, t) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="590" height="118" viewBox="0 0 590 118" fill="none" role="img" aria-label="${esc(item.title)}">
+  <defs>
+    ${glassDefs(t, 'mini')}
+  </defs>
+  ${renderGlassSurface({
+    x: 0,
+    y: 2,
+    w: 590,
+    h: 110,
+    rx: 18,
+    prefix: 'mini',
+    t,
+    filterShadow: t.mode === 'light',
+    inner: `
+      ${renderIconBadge(22, 20, item.icon, t, { size: 32, accent: false })}
+      <text x="66" y="41" class="display" font-size="16" font-weight="600" letter-spacing="-0.25" fill="${t.text}">${esc(item.title)}</text>
+      <text x="566" y="40" text-anchor="end" class="sans" font-size="14" font-weight="500" fill="${t.accentText}">&#8599;</text>
+      <text x="22" y="72" class="sans" font-size="13" fill="${t.textSecondary}">${esc(item.summary)}</text>
+      <text x="22" y="93" class="mono" font-size="11" font-weight="500" fill="${t.textMuted}">${esc(item.stack)}</text>
+    `,
+  })}
+</svg>`;
 }
 
-console.log('Generated 3D Apple-minimal SVGs in ./assets/v3/');
+const STACK_CATEGORIES = [
+  {
+    icon: 'database',
+    title: 'Backend & Datos',
+    chips: ['Python', 'Java 21', 'Spring Boot 3', 'FastAPI', 'Node.js', 'PostgreSQL 16', 'MySQL'],
+  },
+  {
+    icon: 'layers',
+    title: 'Frontend & Desktop',
+    chips: ['React 19', 'JavaScript', 'Tailwind v4', 'Electron', 'Streamlit', 'HTML / CSS'],
+  },
+  {
+    icon: 'neural',
+    title: 'IA, RAG & Automatización',
+    chips: ['LangChain', 'pgvector', 'OpenAI', 'Gemini', 'Pydantic', 'n8n', 'Baileys'],
+  },
+  {
+    icon: 'terminal',
+    title: 'Infraestructura & Calidad',
+    chips: ['Docker', 'Nginx', 'Cloudflare Workers', 'Flyway', 'Git', 'Pytest'],
+  },
+];
+
+function renderWrappedChips(chips, t, { startX = 24, startY = 66, maxInnerW = 540, chipH = 27, gapX = 8, gapY = 9 } = {}) {
+  let cx = startX;
+  let cy = startY;
+  const elements = [];
+
+  for (const label of chips) {
+    const labelW = measureLabelWidth(label, 11.5, false);
+    const chipW = labelW + 30; // dot + padding
+    if (cx + chipW > startX + maxInnerW) {
+      cx = startX;
+      cy += chipH + gapY;
+    }
+    elements.push(`
+    <g transform="translate(${cx}, ${cy})">
+      <rect x="0" y="0" width="${chipW}" height="${chipH}" rx="8.5" fill="${t.pillFill}" stroke="${t.pillStroke}" stroke-width="1"/>
+      <circle cx="11" cy="${chipH / 2}" r="2.3" fill="${t.accentText}"/>
+      <text x="20" y="${chipH / 2 + 4}" class="sans" font-size="11.5" font-weight="500" fill="${t.text}">${esc(label)}</text>
+    </g>`);
+    cx += chipW + gapX;
+  }
+
+  return elements.join('');
+}
+
+function renderStackBento(t) {
+  const quads = STACK_CATEGORIES.map((cat, idx) => {
+    const col = idx % 2;
+    const row = Math.floor(idx / 2);
+    const x = col * 612;
+    const y = 2 + row * 154;
+    return renderGlassSurface({
+      x,
+      y,
+      w: 588,
+      h: 140,
+      rx: 20,
+      prefix: 'stk',
+      t,
+      filterShadow: t.mode === 'light',
+      inner: `
+        ${renderIconBadge(22, 18, cat.icon, t, { size: 30, accent: true })}
+        <text x="62" y="38" class="display" font-size="15.5" font-weight="600" letter-spacing="-0.2" fill="${t.text}">${esc(cat.title)}</text>
+        ${renderWrappedChips(cat.chips, t, { startX: 22, startY: 59, maxInnerW: 544 })}
+      `,
+    });
+  }).join('\n');
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="304" viewBox="0 0 1200 304" fill="none" role="img" aria-label="Stack Tecnológico">
+  <defs>
+    ${glassDefs(t, 'stk')}
+  </defs>
+  ${quads}
+</svg>`;
+}
+
+function renderFooter(t) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="68" viewBox="0 0 1200 68" fill="none" role="img" aria-label="Andrés Felipe Guerra · AG Engineering">
+  <defs>
+    ${glassDefs(t, 'ftr')}
+  </defs>
+  ${renderGlassSurface({
+    x: 0,
+    y: 4,
+    w: 1200,
+    h: 58,
+    rx: 18,
+    prefix: 'ftr',
+    t,
+    filterShadow: t.mode === 'light',
+    inner: `
+      <text x="26" y="33" class="sans" font-size="13" font-weight="600" letter-spacing="-0.1" fill="${t.text}">Andrés Felipe Guerra  <tspan font-weight="400" fill="${t.textMuted}">·  AG Engineering  ·  Bucaramanga, Colombia</tspan></text>
+      <text x="1174" y="33" text-anchor="end" class="sans" font-size="12.5" font-weight="600" fill="${t.accentText}">portfolio.agengineering.workers.dev  &#8599;</text>
+    `,
+  })}
+</svg>`;
+}
+
+for (const [mode, t] of Object.entries(GLASS_THEMES)) {
+  fs.writeFileSync(path.join(OUT_DIR, `hero-${mode}.svg`), renderHero(t), 'utf8');
+  fs.writeFileSync(path.join(OUT_DIR, `pillars-${mode}.svg`), renderPillars(t), 'utf8');
+  fs.writeFileSync(path.join(OUT_DIR, `stack-${mode}.svg`), renderStackBento(t), 'utf8');
+  fs.writeFileSync(path.join(OUT_DIR, `footer-${mode}.svg`), renderFooter(t), 'utf8');
+
+  const buttons = renderActionButtons(t);
+  for (const [slug, svg] of Object.entries(buttons)) {
+    fs.writeFileSync(path.join(OUT_DIR, `btn-${slug}-${mode}.svg`), svg, 'utf8');
+  }
+
+  for (const proj of FEATURED_PROJECTS) {
+    fs.writeFileSync(path.join(OUT_DIR, `proj-${proj.slug}-${mode}.svg`), renderProjectCard(proj, t), 'utf8');
+  }
+
+  for (const item of MINI_PROJECTS) {
+    fs.writeFileSync(path.join(OUT_DIR, `mini-${item.slug}-${mode}.svg`), renderMiniCard(item, t), 'utf8');
+  }
+}
+
+console.log('Generated Apple + Glassmorphism SVGs in ./assets/v4/');
