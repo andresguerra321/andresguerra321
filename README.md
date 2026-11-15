@@ -41,15 +41,7 @@ Desarrollador fullstack en Colombia — arquitectura backend, sistemas de **IA a
 ---
 
 <p align="center">
-  <a href="https://portfolio.agengineering.workers.dev/">Portfolio</a>
-  &nbsp;&nbsp;·&nbsp;&nbsp;
-  <a href="https://www.linkedin.com/in/andr%C3%A9s-felipe-guerra-correa-556333267/">LinkedIn</a>
-  &nbsp;&nbsp;·&nbsp;&nbsp;
-  <a href="mailto:andres.felipe.gueco@gmail.com">Email</a>
-  &nbsp;&nbsp;·&nbsp;&nbsp;
-  <a href="https://es.fiverr.com/s/dDvmP03">Fiverr</a>
-  &nbsp;&nbsp;·&nbsp;&nbsp;
-  <a href="https://wa.me/573185602203">WhatsApp</a>
+  <a href="https://portfolio.agengineering.workers.dev/"><img src="./assets/btn-portfolio.png" alt="Portfolio" height="34" /></a>&nbsp;&nbsp;<a href="https://www.linkedin.com/in/andr%C3%A9s-felipe-guerra-correa-556333267/"><img src="./assets/btn-linkedin.png" alt="LinkedIn" height="34" /></a>&nbsp;&nbsp;<a href="mailto:andres.felipe.gueco@gmail.com"><img src="./assets/btn-email.png" alt="Email" height="34" /></a>&nbsp;&nbsp;<a href="https://es.fiverr.com/s/dDvmP03"><img src="./assets/btn-fiverr.png" alt="Fiverr" height="34" /></a>&nbsp;&nbsp;<a href="https://wa.me/573185602203"><img src="./assets/btn-whatsapp.png" alt="WhatsApp" height="34" /></a>
   <br/><br/>
   <sub>Bucaramanga, Colombia</sub>
 </p>
