@@ -7,11 +7,11 @@ Desarrollador fullstack en Colombia — arquitectura backend, sistemas de **IA a
 <table>
   <tr>
     <td width="50%" valign="top">
-      <strong><a href="https://github.com/andresguerra321/OMEGA">OMEGA</a></strong> · <code>v1.3.1</code><br/>
-      <sub>Threat Intelligence &amp; Forense Zero-Retention</sub><br/><br/>
-      Correlación CTI sobre spyware comercial y triaje forense en RAM sin persistencia en disco, con RAG híbrido (<code>pgvector</code> + RRF) e integridad <code>SHA-256</code>.<br/><br/>
-      <sub>Java 21 · Spring Boot 3 · FastAPI · Electron</sub><br/>
-      <sub><a href="https://github.com/andresguerra321/OMEGA/blob/main/omega/backend-java/README.md">Arquitectura</a> · <a href="https://github.com/andresguerra321/OMEGA/blob/main/omega/rag_engine/eval/ablation_report_v1.md">RAGAS</a> · <a href="https://github.com/andresguerra321/OMEGA/releases/tag/v1.3.1">Release v1.3.1</a></sub>
+      <strong><a href="https://github.com/andresguerra321/OMEGA">OMEGA</a></strong> · <code>v2.1.0</code><br/>
+      <sub>Threat Intelligence, AppSec &amp; Forense Zero-Retention</sub><br/><br/>
+      Plataforma defensiva multi-tenant con espacios adaptativos (General, Developer y Legal), escáner de repositorios/SBOM, correlación CTI/OSINT, triaje forense en RAM, RAG híbrido (<code>pgvector</code> + RRF), 2FA e integridad <code>Ed25519</code>/<code>SHA-256</code>.<br/><br/>
+      <sub>Java 21 · Spring Boot 3 · FastAPI · React 19 · Tauri v2 (Rust)</sub><br/>
+      <sub><a href="https://github.com/andresguerra321/OMEGA/blob/main/omega/backend-java/README.md">Arquitectura</a> · <a href="https://github.com/andresguerra321/OMEGA/blob/main/omega/rag_engine/eval/ablation_report_v1.md">RAGAS</a> · <a href="https://github.com/andresguerra321/OMEGA/releases">Releases (v2.1.0)</a></sub>
     </td>
     <td width="50%" valign="top">
       <strong><a href="https://github.com/andresguerra321/GUARDIAN">GUARDIAN</a></strong><br/>
@@ -36,7 +36,7 @@ Desarrollador fullstack en Colombia — arquitectura backend, sistemas de **IA a
   </tr>
 </table>
 
-<img src="./assets/skills-batcave.png" alt="Habilidades técnicas — Backend: Java 21, Spring Boot 3, FastAPI, PostgreSQL 16 (HNSW), DDD; IA y RAG: pgvector + RRF, Pydantic, LangChain LCEL, Evaluación RAGAS; AppSec: Zero-Retention (RAM), JWT y HttpOnly, RBAC, SHA-256" width="100%" />
+<img src="./assets/skills-batcave.png" alt="Habilidades técnicas — Backend: Java 21, Spring Boot 3, FastAPI, PostgreSQL 16 (HNSW), DDD; IA y RAG: pgvector + RRF, Pydantic, LangChain LCEL, Evaluación RAGAS; AppSec: Zero-Retention (RAM), Tauri v2 (Rust), JWT y HttpOnly, 2FA, RBAC, Ed25519/SHA-256" width="100%" />
 
 ---
 
